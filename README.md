@@ -8,7 +8,7 @@
 - [voices &mdash; introduction](#voices-&mdash-introduction)
 - [Examples](#examples)
 - [Installation](#installation)
-  - [From the npm registry](#from-the-npm-registry)
+  - [Installation from the npm registry](#installation-from-the-npm-registry)
   - [Manual installation](#manual-installation)
 - [Usage](#usage)
 - [License](#license)
@@ -29,7 +29,7 @@
  * filtering voices by language
  * speaking text with _multiple_ voices.
 
-_Caveat_: OSX, as of OSX 10.10, offers no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility cannot be guaranteed.
+_Caveat_: OSX, as of OSX 10.10, offers no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
 
 # Examples
 
@@ -53,17 +53,17 @@ voices -L
   # List active French voices.
 voices -l fr
 
-  # Print information about all active voices and speak the
+  # Print information about all active voices and speak
   # their respective demo text.
 voices -l -k
-
-  # Say "hello", first with Alex, then with Jill, suppressing printed
-  # output.
-voices -k"hello" -q alex jill
 
   # Print information about all active Spanish voices and speak their
   # respective demo text.
 voices -k -l es
+  
+  # Say "hello", first with voice Alex, then with Jill, suppressing printed
+  # output.
+voices -k"hello" -q alex jill
 ```
 
 # Installation
@@ -72,9 +72,12 @@ voices -k -l es
 
 * **OSX**
 
-Tested on OS X 10.10, expected to work on 10.8+, but, due to use of undocumented system internals, future compatiblity cannot be guaranteed.
+Tested on OS X 10.10, expected to work on 10.8+.
 
-## From the npm registry
+The change-the-default-voice feature makes use of undocumented system internals, so its future compatiblity is uncertain.
+[Do let me know](https://github.com/mklement0/voices/issues) if you find the feature broken in a future OSX version.
+
+## Installation from the npm registry
 
 With [Node.js](http://nodejs.org/) or [io.js](https://iojs.org/) installed, install [the package](https://www.npmjs.com/package/voices) as follows:
 
@@ -261,6 +264,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.1](https://github.com/mklement0/voices/compare/v0.1.0...v0.1.1)** (2015-06-30):
+  * [doc] Read-me improvements.
 
 * **v0.1.0** (2015-06-29):
   * Initial release.
