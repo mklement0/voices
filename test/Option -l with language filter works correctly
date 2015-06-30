@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# ---
+# IMPORTANT: Use the following statement at the TOP OF EVERY TEST SCRIPT
+#            to ensure that this package's 'bin/' subfolder is added to the path so that
+#            this package's CLIs can be invoked by their mere filename in the rest
+#            of the script.
+# ---
+PATH=${PWD%%/test*}/bin:$PATH
+
+# Helper function for error reporting.
+die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
+
+defaultVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName) || die "Couldn't determine current default voice."
+
+# Get all *installed* English-language voices, irrespective of region.
+# Note that say -v \? always reports all *installed* voices, irrespective of which are selected for active use.
+enVoicesRef=$(say -v \? | grep -E "^.+[^ ] +en[_-]\w+ +#.+") || die "Couldn't determine English references voices."
+
+# Let `voices` do the same, and ensure the results match.
+[[ $(voices -a -l 'en') == "$enVoicesRef" ]] || die "Filtered list of English voices doesn't match the reference list, '$enVoicesRef'."
+
+exit 0

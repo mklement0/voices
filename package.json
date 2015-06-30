@@ -1,0 +1,49 @@
+{
+  "name": "voices",
+  "description": "OSX CLI for changing the default TTS (text-to-speech) voice and printing information about and speaking text with multiple voices.",
+  "private": false,
+  "version": "0.1.0",
+  "os": [
+    "darwin"
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "voices": "bin/voices"
+  },
+  "homepage": "https://github.com/mklement0/voices",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mklement0/voices.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mklement0/voices/issues"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "voice",
+    "TTS",
+    "text-to-speech",
+    "default",
+    "CLI",
+    "speak",
+    "language"
+  ],
+  "author": "Michael Klement <mklement0@gmail.com> (http://same2u.net)",
+  "license": "MIT",
+  "net_same2u": {
+    "make_pkg": {
+      "tocOn": true,
+      "tocTitle": "**Contents**"
+    }
+  },
+  "devDependencies": {
+    "doctoc": "^0.13.0",
+    "json": "^9.0.3",
+    "replace": "^0.3.0",
+    "semver": "^4.2.0",
+    "tap": "^0.6.0",
+    "urchin": "^0.0.5"
+  }
+}

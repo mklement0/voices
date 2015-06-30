@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# ---
+# IMPORTANT: Use the following statement at the TOP OF EVERY TEST SCRIPT
+#            to ensure that this package's 'bin/' subfolder is added to the path so that
+#            this package's CLIs can be invoked by their mere filename in the rest
+#            of the script.
+# ---
+PATH=${PWD%%/test*}/bin:$PATH
+
+# Helper function for error reporting.
+die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
+
+# Get list of all installed voices.
+allVoices=$(say -v \?)
+
+# Using 'voices', get list of *active* voices; i.e., the subset selectd for active use via System Preferences > Dication & Speech > Text to Speech.
+activeVoices=$(voices -l)
+
+# The set of voices the list of all voices and the list of active voices should have in common 
+# is the list of active voices.
+# Note that this test succeeds even if the set of active voices is the same as the list of installed voices,
+# but we have no easy way of creating a reference list of active voices, because `say -v \?` invariably reports all installed voices.
+[[ $(comm -12 <(echo "$allVoices") <(echo "$activeVoices")) == "$activeVoices" ]] || die "Active voices not a subset of installed voices."
+
+exit 0

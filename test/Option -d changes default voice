@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# ---
+# IMPORTANT: Use the following statement at the TOP OF EVERY TEST SCRIPT
+#            to ensure that this package's 'bin/' subfolder is added to the path so that
+#            this package's CLIs can be invoked by their mere filename in the rest
+#            of the script.
+# ---
+PATH=${PWD%%/test*}/bin:$PATH
+
+# Helper function for error reporting.
+die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
+
+defaultVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName) || die "Couldn't determine current default voice."
+
+# Get the first voice that is not the current default voice.
+tempDefaultVoiceLine=$(say -v \? | grep -Ev -m 1 "^$defaultVoice +[a-z]{2}[_-]\w+ +#") || die "Couldn't determine temp. default voice."
+tempDefaultVoice=$(sed -E 's/^(.+[^ ]) +[a-z]{2}[_-][[:alnum:]]+ +#.*$/\1/' <<<"$tempDefaultVoiceLine")
+
+# echo "??before setting to '$tempDefaultVoice'"
+
+voices -qd "$tempDefaultVoice" || die "Failed to set default voice to '$tempDefaultVoice'."
+
+# echo "??after"
+
+actualNewdefaultVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName) || die "Couldn't determine new default voice."
+
+# echo "??defaults re-read"
+
+shopt -s nocasematch
+[[ $actualNewdefaultVoice == "$tempDefaultVoice" ]] || die "Temp. default voice '$tempDefaultVoice' differs from actual default voice, '$actualNewdefaultVoice'."
+
+# echo "??defaults compared"
+
+# Rever to previous default voice.
+# !! After having changed the default voice only recently, a subsequent attempt takes much longer, up to 10 seconds (why??).
+voices -qd "$defaultVoice" || die "Failed to revert to previous default voice, '$defaultVoice'"
+
+# echo "??reset to $defaultVoice"
+
+exit 0

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# ---
+# IMPORTANT: Use the following statement at the TOP OF EVERY TEST SCRIPT
+#            to ensure that this package's 'bin/' subfolder is added to the path so that
+#            this package's CLIs can be invoked by their mere filename in the rest
+#            of the script.
+# ---
+PATH=${PWD%%/test*}/bin:$PATH
+
+# Helper function for error reporting.
+die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
+
+voices -m || die
+
+osascript <<'EOF' || die
+tell application "System Preferences"
+  if not it is running then error "System Preferences app is not running."
+  set currPane to ""
+  try
+    set currPane to id of current pane
+  end try
+  if currPane = "" then error "No System Preferences pane is active."
+  if currPane ≠ "com.apple.preference.speech" then error "The Dictation & Speech pane is not active; instead, it is " & currPane
+end tell
+activate application "Terminal"
+EOF
+
+exit 0
