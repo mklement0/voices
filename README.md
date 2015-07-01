@@ -200,8 +200,9 @@ DESCRIPTION
         Outputs internal voice identifiers, as used by the system.
 
 NOTES
-  Tested on OS X 10.10, expected to work on 10.8+, but due to use of
-  undocumented system internals future compatiblity cannot be guaranteed.
+  Tested on OS X 10.10, expected to work on 10.8+; due to use of
+  undocumented system internals, future compatibility of the
+  change-the-default-voice feature is uncertain.
 
   The focus of this utility is speaking text with *multiple* voices, changing
   the default voice, and browsing active voices, optionally filtered by 
@@ -264,6 +265,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.2](https://github.com/mklement0/voices/compare/v0.1.1...v0.1.2)** (2015-07-01):
+  * [doc] CLI help improved.
 
 * **[v0.1.1](https://github.com/mklement0/voices/compare/v0.1.0...v0.1.1)** (2015-06-30):
   * [doc] Read-me improvements.
