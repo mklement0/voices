@@ -122,7 +122,7 @@ DESCRIPTION
    - Specify voice names as they appear in System Preferences > 
      Dictation & Speeech and in the output from `say -v \?`.
    - Specify languages as two-character language IDs (e.g., 'en'), optionally
-     followed by '_' and a region identifier full (e.g., 'en_US').
+     followed by '_' and a region identifier (e.g., 'en_US').
 
   -l and -L target all *active* voices by default, which are typically a 
   a *subset* of all *installed* voices, and constitute the set of voices for
@@ -265,6 +265,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.3](https://github.com/mklement0/voices/compare/v0.1.2...v0.1.3)** (2015-07-06):
+  * [doc] CLI-help copyediting; wording of `--version` streamlined.
 
 * **[v0.1.2](https://github.com/mklement0/voices/compare/v0.1.1...v0.1.2)** (2015-07-01):
   * [doc] CLI help improved.
