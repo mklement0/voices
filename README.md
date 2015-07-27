@@ -11,6 +11,9 @@
   - [Installation from the npm registry](#installation-from-the-npm-registry)
   - [Manual installation](#manual-installation)
 - [Usage](#usage)
+- [OSX Service for switching between default voices](#osx-service-for-switching-between-default-voices)
+  - [Installation](#installation-1)
+  - [Customization](#customization)
 - [License](#license)
   - [Acknowledgements](#acknowledgements)
   - [npm dependencies](#npm-dependencies)
@@ -20,7 +23,7 @@
 
 # voices &mdash; introduction
 
-`voices` is an OSX CLI for changing the default TTS (text-to-speech) and VoiceOver voice and for printing information about and speaking text with multiple voices.
+`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech) and VoiceOver voice** and for **printing information about and/or speaking text with multiple voices**.
 
 `voices` complements the standard `say` utility by:
 
@@ -29,7 +32,10 @@
  * filtering voices by language
  * speaking text with _multiple_ voices.
 
-_Caveat_: OSX, as of OSX 10.10, offers no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+_Caveat_: OSX, as of OSX 10.11, offers no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+
+Additionally, a **self-contained OSX service for switching between two default
+voices** is offered [below](#osx-service-for-switching-between-default-voices).
 
 # Examples
 
@@ -98,7 +104,7 @@ With [Node.js](http://nodejs.org/) or [io.js](https://iojs.org/) installed, inst
 
 <!-- DO NOT EDIT THE FENCED CODE BLOCK and RETAIN THIS COMMENT: The fenced code block below is updated by `make update-readme/release` with CLI usage information. -->
 
-```
+```nohighlight
 $ voices --help
 
 SYNOPSIS
@@ -235,6 +241,31 @@ EXAMPLES
   voices -k -l es
 ```
 
+# OSX Service for switching between default voices
+
+This service, which uses an embedded copy of `voices`, is helpful if you use text-to-speech in two languages and want to quickly
+switch the default voice back and forth between two designated voices.
+
+You can invoke it from the standard `Services` menu or assign it a
+keyboard shortcut via `System Preferences > Keyboard > Shortcuts`.
+
+## Installation
+
+* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Switch Default Voice.workflow.zip).
+* In Finder, open the ZIP file, which creates package `Switch Default Voice.workflow` in the same folder.
+* Open `Switch Default Voice.workflow` and choose `Install` when prompted - this will place the package in `~/Library/Services/`.
+* Choose `Open in Automator` when prompted and proceed with customization below.
+
+## Customization
+
+* In Automator, follow the instructions at the top of the document, notably in order to specify what voices to switch back and forth between
+  * Apply your customizations between the lines `# ----------- BEGIN: CUSTOMIZE HERE` and `# ----------- END: CUSTOMIZE HERE`.
+  * Test by pressing the `Run` toolbar button (playback icon). Note that trying to change the default voice quickly in succession introduces a delay.
+* To assign a keyboard shortcut, go to `System Preferences > Keyboard > Shortcuts`, category `Services`, scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click near the right edge of the list item.
+* To customize the service again later, open `~/Library/Services/Switch Default Voice.workflow` in Automator.
+  * If you have trouble navigating to `~/Library`, activate Finder, hold down the Option key while selecting the `Go` menu, and select `Library`; from there, navigate to subfolder `Services` and open package `Switch Default Voice.workflow`.
+
+
 <!-- DO NOT EDIT THE NEXT CHAPTER and RETAIN THIS COMMENT: The next chapter is updated by `make update-readme/release` with the contents of 'LICENSE.md'. ALSO, LEAVE AT LEAST 1 BLANK LINE AFTER THIS COMMENT. -->
 
 # License
@@ -265,6 +296,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.4](https://github.com/mklement0/voices/compare/v0.1.3...v0.1.4)** (2015-07-27):
+  * [enhancement] Added Automator-based OSX service for switching between two default voices.
+  * [fix] Inability to determine the default voice on a pristine system is now handled more gracefully.
 
 * **[v0.1.3](https://github.com/mklement0/voices/compare/v0.1.2...v0.1.3)** (2015-07-06):
   * [doc] CLI-help copyediting; wording of `--version` streamlined.

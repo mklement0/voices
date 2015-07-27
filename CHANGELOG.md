@@ -4,6 +4,10 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.1.4](https://github.com/mklement0/voices/compare/v0.1.3...v0.1.4)** (2015-07-27):
+  * [enhancement] Added Automator-based OSX service for switching between two default voices.
+  * [fix] Inability to determine the default voice on a pristine system is now handled more gracefully.
+
 * **[v0.1.3](https://github.com/mklement0/voices/compare/v0.1.2...v0.1.3)** (2015-07-06):
   * [doc] CLI-help copyediting; wording of `--version` streamlined.
 
