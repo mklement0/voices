@@ -32,7 +32,7 @@
  * filtering voices by language
  * speaking text with _multiple_ voices.
 
-_Caveat_: OSX, as of OSX 10.11, offers no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+_Caveat_: As of OSX 10.11 (El Capitan), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
 
 Additionally, a **self-contained OSX service for switching between two default
 voices** is offered [below](#osx-service-for-switching-between-default-voices).
@@ -78,7 +78,7 @@ voices -k"hello" -q alex jill
 
 * **OSX**
 
-Tested on OS X 10.10, expected to work on 10.8+.
+Verified to work from OSX 10.8 (Mountain Lion) up to 10.11 (El Capitan).
 
 The change-the-default-voice feature makes use of undocumented system internals, so its future compatiblity is uncertain.
 [Do let me know](https://github.com/mklement0/voices/issues) if you find the feature broken in a future OSX version.
@@ -206,9 +206,8 @@ DESCRIPTION
         Outputs internal voice identifiers, as used by the system.
 
 NOTES
-  Tested on OS X 10.10, expected to work on 10.8+; due to use of
-  undocumented system internals, future compatibility of the
-  change-the-default-voice feature is uncertain.
+  Tested on on OSX 10.8 - 10.11; due to use of undocumented system internals,
+  future compatibility of the change-the-default-voice feature is uncertain.
 
   The focus of this utility is speaking text with *multiple* voices, changing
   the default voice, and browsing active voices, optionally filtered by 
@@ -296,6 +295,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.5](https://github.com/mklement0/voices/compare/v0.1.4...v0.1.5)** (2015-07-27):
+  * [doc] Read-me and CLI help amended with respect to supported OSX versions.
 
 * **[v0.1.4](https://github.com/mklement0/voices/compare/v0.1.3...v0.1.4)** (2015-07-27):
   * [enhancement] Added Automator-based OSX service for switching between two default voices.
