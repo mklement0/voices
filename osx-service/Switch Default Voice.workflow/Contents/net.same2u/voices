@@ -27,7 +27,7 @@ dieSyntax() {
 }
 
 # Output version number and exit, if requested. Note that the `ver='...'` statement is automatically updated by `make version VER=<newVer>` - DO keep the 'v' suffix in the variable *definition*.
-[[ $1 == '--version' ]] && { ver='v0.1.4'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
+[[ $1 == '--version' ]] && { ver='v0.1.6'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
 
 # Command-line help.
 if [[ "$1" == '--help' || "$1" == '-h' ]]; then
@@ -131,9 +131,8 @@ DESCRIPTION
         Outputs internal voice identifiers, as used by the system.
 
 NOTES
-  Tested on OS X 10.10, expected to work on 10.8+; due to use of
-  undocumented system internals, future compatibility of the
-  change-the-default-voice feature is uncertain.
+  Tested on on OSX 10.8 - 10.11; due to use of undocumented system internals,
+  future compatibility of the change-the-default-voice feature is uncertain.
 
   The focus of this utility is speaking text with *multiple* voices, changing
   the default voice, and browsing active voices, optionally filtered by 
