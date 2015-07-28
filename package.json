@@ -2,7 +2,7 @@
   "name": "voices",
   "description": "OSX CLI for changing the default TTS (text-to-speech) voice and printing information about and speaking text with multiple voices.",
   "private": false,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "os": [
     "darwin"
   ],
