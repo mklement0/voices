@@ -216,6 +216,11 @@ NOTES
   voice, it is easier to use `say` directly; e.g.:
     say -v Alex I am. # equivalent of: voices -k"I am." Alex
 
+  CAVEAT: As of OSX 10.11, due to a limitation in the underlying `say`
+          utility, custom speaking rates (words per minute) configured via
+          System Preferences are not honored when producing spoken output with
+          the -k option.
+          
 EXAMPLES
     # List all active voices; add -a to list all installed ones.
   voices -l         
@@ -297,7 +302,7 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
 * **[v0.1.7](https://github.com/mklement0/voices/compare/v0.1.6...v0.1.7)** (2015-07-28):
-  * [fix] When switching default voices, any custom speaking rate (words per minute) configured for a given voice via System Preferences is now honored.
+  * [fix] When switching default voices, any custom speaking rate (words per minute) configured for a given voice via System Preferences is now honored. Note, however, that speaking text with `voices`' own `-k` option does _not_ honor custom speaking rates due to a limitation in the underlying `say` utility.
 
 * **[v0.1.6](https://github.com/mklement0/voices/compare/v0.1.5...v0.1.6)** (2015-07-28):
   * [dev] Pre-commit hook fixed to ensure that the modified workflow and ZIP file are added to the index before committing.

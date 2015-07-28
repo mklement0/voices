@@ -7,3 +7,6 @@ node_modules/
 
 # urchin log files
 .urchin.log
+
+# QuickLook preview files inside the *.workflow bundle
+**/*.workflow/Contents/QuickLook/

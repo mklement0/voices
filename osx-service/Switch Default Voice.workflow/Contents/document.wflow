@@ -118,9 +118,12 @@ newVoice=${voices[newNdx]}
 confirmation=${confirmations[newNdx]//\$newVoice/$newVoice}
 
 # Make the change.
-otherOpts=()
-(( voiceFeedback )) &amp;&amp; otherOpts=( -k"$confirmation" )
-"$voicesExe" "${otherOpts[@]}" -d "$newVoice" || die "Failed to change the default voice."
+"$voicesExe" -d "$newVoice" || die "Failed to change the default voice."
+
+# Speak the confirmation, if requested.
+# !! Note that we use `say` without -v, relying on the fact that the default voice has already been switched, which has the
+# !! added advantage of a custom speaking rate being honored (using -v, even with the default voice name, does not honor the custom speaking rate as of OSX 10.11).
+(( voiceFeedback )) &amp;&amp; say "$confirmation" 
 </string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -234,7 +237,7 @@ otherOpts=()
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>781.000000:866.000000</string>
+				<string>781.000000:868.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
