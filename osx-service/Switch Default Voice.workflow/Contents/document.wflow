@@ -64,8 +64,8 @@
 # NOTE: Be sure to retain the parenthese around the values, and to have no spaces around "=".
 
   # The default voices to switch between and the respective confirmation text to speak.
-voices=(         Anna           Samantha )
-confirmations=( '$newVoice.' '$newVoice' )
+voices=(         Alex                     Vicki )
+confirmations=( 'Switched to $newVoice.' 'Switched to $newVoice.' )
 
   # The default is to give spoken feedback after changing the voice and when errors occur.
   # Set to 0 to disable this, but note that it's helpful to get audible feedback to know when the switch has completed.
@@ -237,7 +237,7 @@ confirmation=${confirmations[newNdx]//\$newVoice/$newVoice}
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>781.000000:868.000000</string>
+				<string>781.000000:617.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
