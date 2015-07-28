@@ -27,7 +27,7 @@ dieSyntax() {
 }
 
 # Output version number and exit, if requested. Note that the `ver='...'` statement is automatically updated by `make version VER=<newVer>` - DO keep the 'v' suffix in the variable *definition*.
-[[ $1 == '--version' ]] && { ver='v0.1.6'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
+[[ $1 == '--version' ]] && { ver='v0.1.7'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
 
 # Command-line help.
 if [[ "$1" == '--help' || "$1" == '-h' ]]; then
@@ -487,18 +487,29 @@ setDefaultVoice() {
     # Simply updating defaults is NOT enough for the text-to-speech and voice-over features to pick up the change
     # - only `say` does.
     # Without further action, text-to-speech and voice-over would only pick up the change on next reboot or after logging out and back in.
-    # An effective workaround is to kill the the per-user speech-synthesis daemon, which causes
+    # An effective workaround is to kill the the per-user speech-synthesis server, which causes
     # the system to instantly restart it - at which point the new settings are read and take effect.
-    # The downside of killing the speech-synthesis daemon, com.apple.speech.speechsynthesisd, is that there's no
-    # no guarantee that its name will stay the same across OSX versions.
+    # We keep our fingers crossed that the name and location of the speech-synthesis server, SpeechSynthesisServer.app,
+    # does not change in future OSX versions.
     # The current name was obtained on OSX 10.10.3 as follows:
-    # Activity Monitor > search for 'speech' > inspect the Open Files and Ports tab of matches for an entry matching the
-    # current default voice, e.g., /System/Library/Speech/Voices/Samantha.* for default voice Samantha.
-  pkill com.apple.speech.speechsynthesisd || cat <<EOF >&2
+    # Activity Monitor > search for 'speech'.
+    #  Note that it is the speech-synthesis server *daemon, com.apple.speech.speechsynthesisd, that has the current default voice open
+    #  if you inspect the Open Files and Ports tab.
+    #  It is tempting, to simply run pkill com.apple.speech.speechsynthesisd and let the system restart the process, but that does NOT
+    #  fully work: while changing the voice per se is effective, *custom speaking rates for the voices are NOT honored& - 
+    #  whatever rate was last active lingers.
+    #  **Thus, it is the speech-synthesis *server* we must kill and manually restart.**
+    #  Tip of the hat to http://stackoverflow.com/a/27776019/45375
+  pkill -x SpeechSynthesisServer &>/dev/null
+  # The following path is the abstracted version - using the system-installed symlinks such as 'Current' that point to the active location - of:
+  #    /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesisServer.app
+  # The actual process command-line launched by the `open` command below looks like this:
+  #    /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesisServer.app/Contents/MacOS/SpeechSynthesisServer launchd
+  open /System/Library/Frameworks/ApplicationServices.framework/Frameworks/SpeechSynthesis.framework/Versions/Current/SpeechSynthesisServer.app || cat <<EOF >&2  
 WARNING:
-  Failed to restart the speech-synthesis daemon.
+  Failed to restart the speech-synthesis server.
   While the \`say\` utility will reflect the new default voice instantly,
-  the text-to-speech and voice-over features will not use the new voice
+  the text-to-speech and voice-over features may not use the new voice
   until after you restart your system.
 EOF
 
