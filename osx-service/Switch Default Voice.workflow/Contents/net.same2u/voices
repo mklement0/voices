@@ -27,7 +27,7 @@ dieSyntax() {
 }
 
 # Output version number and exit, if requested. Note that the `ver='...'` statement is automatically updated by `make version VER=<newVer>` - DO keep the 'v' suffix in the variable *definition*.
-[[ $1 == '--version' ]] && { ver='v0.1.8'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
+[[ $1 == '--version' ]] && { ver='v0.1.9'; echo "$kTHIS_NAME ${ver#v}"$'\nFor license information and more, visit https://github.com/mklement0/voices'; exit 0; }
 
 # Command-line help.
 if [[ "$1" == '--help' || "$1" == '-h' ]]; then
@@ -45,7 +45,7 @@ SYNOPSIS
     $kTHIS_NAME -m
 
 DESCRIPTION
-  Sets the default voice for OS X's text-to-speech synthesis and voice-over or 
+  Sets the default voice for OS X's TTS (text-to-speech) synthesis or 
   returns information about the default, active and installed voices.
   Optionally speaks demo or specifiable text with all targeted voices.
 
@@ -140,6 +140,9 @@ NOTES
   By contrast, to just speak text with the default voice or a specified single
   voice, it is easier to use \`say\` directly; e.g.:
     say -v Alex I am. # equivalent of: $kTHIS_NAME -k"I am." Alex
+
+  Note that the related VoiceOver accessibility feature has its own default
+  voice, which is not changed by this utility.
 
   CAVEAT: As of OSX 10.11, due to a limitation in the underlying \`say\`
           utility, custom speaking rates (words per minute) configured via
@@ -409,7 +412,7 @@ EOF
 #     Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
 #      
 # Friendly voice names occur in the following places:
-#  - in System Preferences, in the TTS (Dictation & Speech) and Voice Over (Accessibility) settings
+#  - in System Preferences, in the TTS (Dictation & Speech) and VoiceOver (Accessibility) settings
 #  - in the output of `say -v \?`
 #  - in the 'SelectedVoiceName' value of the com.apple.speech.voice.prefs preferences file.
 # 
@@ -489,16 +492,16 @@ setDefaultVoice() {
 
     # Sadly, there's no official way to notify the system of a change in default voice, as the only official way
     # to change the default voice is to use System Preferences interactively.
-    # Simply updating defaults is NOT enough for the text-to-speech and voice-over features to pick up the change
+    # Simply updating defaults is NOT enough for the text-to-speech feature to pick up the change
     # - only `say` does.
-    # Without further action, text-to-speech and voice-over would only pick up the change on next reboot or after logging out and back in.
+    # Without further action, text-to-speech would only pick up the change on next reboot or after logging out and back in.
     # An effective workaround is to kill the the per-user speech-synthesis server, which causes
     # the system to instantly restart it - at which point the new settings are read and take effect.
     # We keep our fingers crossed that the name and location of the speech-synthesis server, SpeechSynthesisServer.app,
     # does not change in future OSX versions.
     # The current name was obtained on OSX 10.10.3 as follows:
     # Activity Monitor > search for 'speech'.
-    #  Note that it is the speech-synthesis server *daemon, com.apple.speech.speechsynthesisd, that has the current default voice open
+    #  Note that it is the speech-synthesis server *daemon*, com.apple.speech.speechsynthesisd, that has the current default voice open
     #  if you inspect the Open Files and Ports tab.
     #  It is tempting, to simply run pkill com.apple.speech.speechsynthesisd and let the system restart the process, but that does NOT
     #  fully work: while changing the voice per se is effective, *custom speaking rates for the voices are NOT honored& - 
@@ -514,8 +517,7 @@ setDefaultVoice() {
 WARNING:
   Failed to restart the speech-synthesis server.
   While the \`say\` utility will reflect the new default voice instantly,
-  the text-to-speech and voice-over features may not use the new voice
-  until after you restart your system.
+  the text-to-speech feature may not use the new voice until after a reboot.
 EOF
 
 }

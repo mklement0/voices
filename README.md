@@ -23,7 +23,7 @@
 
 # voices &mdash; introduction
 
-`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech) and VoiceOver voice** and for **printing information about and/or speaking text with multiple voices**.
+`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech)** and for **printing information about and/or speaking text with multiple voices**.
 
 `voices` complements the standard `say` utility by:
 
@@ -120,7 +120,7 @@ SYNOPSIS
     voices -m
 
 DESCRIPTION
-  Sets the default voice for OS X's text-to-speech synthesis and voice-over or 
+  Sets the default voice for OS X's TTS (text-to-speech) synthesis or 
   returns information about the default, active and installed voices.
   Optionally speaks demo or specifiable text with all targeted voices.
 
@@ -216,6 +216,9 @@ NOTES
   voice, it is easier to use `say` directly; e.g.:
     say -v Alex I am. # equivalent of: voices -k"I am." Alex
 
+  Note that the related VoiceOver accessibility feature has its own default
+  voice, which is not changed by this utility.
+
   CAVEAT: As of OSX 10.11, due to a limitation in the underlying `say`
           utility, custom speaking rates (words per minute) configured via
           System Preferences are not honored when producing spoken output with
@@ -300,6 +303,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.9](https://github.com/mklement0/voices/compare/v0.1.8...v0.1.9)** (2015-07-28):
+  * [doc] Corrected the mistaken claim that changing the default voice also changes the _VoiceOver_ default voice: the VoiceOver feature has its own default voice, separate from the TTS feature; this utility only changes the _TTS_ default voice, not also the VoiceOver one.
 
 * **[v0.1.8](https://github.com/mklement0/voices/compare/v0.1.7...v0.1.8)** (2015-07-28):
   * [fix] Regression: default customization data for the OSX service reset to original values (two US English-voices).
