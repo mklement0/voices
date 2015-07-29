@@ -1,0 +1,281 @@
+# NOTE: 
+#       CUSTOMIZE SETTING BELOW.
+#       BE SURE TO RETAIN THE PARENTHESE AROUND VALUES, WHERE PRESENT, AND TO
+#       HAVE NO SPACES AROUND "=".
+#       - This file's path is ~/.SwitchDefaultVoice-rc
+#       - This file is parsed by ~/Library/Services/Switch Default Voice.workflow using Bash.
+#       - For more information, go to https://github.com/mklement0/voices#osx-service-for-switching-between-default-voices
+
+  # LIST OF VOICES:
+  # NOTE: This is the only setting you MUST customize.
+  # The default voices to switch between - specify their names as they appear
+  # in System Preferences > Dictation & Speech > Text to Speech.
+voices=( Alex Vicki Jill )
+
+# -- OPTIONAL further customization below.
+
+  # VOICE FEEDBACK SWITCH:
+  # The default is to give spoken feedback after changing the voice and when 
+  # errors occur, which is generally helpful to know when the switch has
+  # completed.
+  # Remove the "#" from the beginning of the following line to disable spoken
+  # feedback.
+#voiceFeedback=0
+
+  # CONFIRMATION TEXT:
+  # If voice feedback is on (see below), the confirmation text to speak when
+  # a new voice has been switched to.
+  # - Default: 
+  #   The localized name of the new voice's language, e.g. 'English (U.S.)'
+  # - If specified:
+  #   IMPORTANT: Enclose values in *single* quotes; use '\'' for embedded
+  #              single quotes.
+  #   You may specify a *single* value that is then used for all languages.
+  #   Otherwise, specify an *array* with a specific entry for each voice
+  #   specified above.
+  #   The following variables may be used in the text:
+  #      $newVoice ... the name of the voice just switched to
+  #      $newLang ... the localized name of the new voice's language.
+ # Single-value example; remove initial '#' to activate.
+#confirmations='$newVoice'
+ # Array example; remove initial '#' to activate.
+#confirmations=( 'Alex speaking' 'I am Vicki' 'Jill here' )
+
+
+# -- SETTINGS BELOW THIS LINE NORMALLY NEED NO CUSTOMIZATION.
+#    However, you may tweak or extend them, if needed.
+
+  # Mapping of language tags to their localized names.
+  # Note that this list covers more languages than Apple currently offers.
+  # See https://www.evernote.com/l/AEUqQAA9UI1HeqXRPKbVVEz-jF5oZMciZB0.
+  # Original localized names slightly tweaked:
+  #  - to shorten 'United States' and 'United Kingdom' to 'U.S.' and 'U.K.'
+  #  - to remove the country suffix from languages with obvious home countries,
+  #    such as German, French, and Spain.
+
+af_ZA="Afrikaans (Suid Afrika)" # Afrikaans (South Africa)
+am_ET="አማርኛ (ኢትዮጵያ)" # Amharic (Ethiopia)
+ar_AE="العربية (الإمارات العربية المتحدة)‏" # Arabic (U.A.E.)‎
+ar_BH="العربية (البحرين)‏" # Arabic (Bahrain)‎
+ar_DZ="العربية (الجزائر)‏" # Arabic (Algeria)‎
+ar_EG="العربية (مصر)‏" # Arabic (Egypt)‎
+ar_IQ="العربية (العراق)‏" # Arabic (Iraq)‎
+ar_JO="العربية (الأردن)‏" # Arabic (Jordan)‎
+ar_KW="العربية (الكويت)‏" # Arabic (Kuwait)‎
+ar_LB="العربية (لبنان)‏" # Arabic (Lebanon)‎
+ar_LY="العربية (ليبيا)‏" # Arabic (Libya)‎
+ar_MA="العربية (المملكة المغربية)‏" # Arabic (Morocco)‎
+ar_OM="العربية (عمان)‏" # Arabic (Oman)‎
+ar_QA="العربية (قطر)‏" # Arabic (Qatar)‎
+ar_SA="العربية (المملكة العربية السعودية)‏" # Arabic (Saudi Arabia)‎
+ar_SY="العربية (سوريا)‏" # Arabic (Syria)‎
+ar_TN="العربية (تونس)‏" # Arabic (Tunisia)‎
+ar_YE="العربية (اليمن)‏" # Arabic (Yemen)‎
+arn="Mapudungun" # Mapudungun
+arn_CL="Mapudungun (Chile)" # Mapudungun (Chile)
+as_IN="অসমীয়া (ভাৰত)" # Assamese (India)
+az_Cyrl="Азәрбајҹан дили" # Azeri (Cyrillic)
+az_Latn="Azərbaycan­ılı" # Azeri (Latin)
+ba_RU="Башҡорт (Россия)" # Bashkir (Russia)
+be_BY="Беларускі (Беларусь)" # Belarusian (Belarus)
+bg_BG="български (България)" # Bulgarian (Bulgaria)
+bn_BD="বাংলা (বাংলাদেশ)" # Bengali (Bangladesh)
+bn_IN="বাংলা (ভারত)" # Bengali (India)
+bo_CN="བོད་ཡིག (ཀྲུང་ཧྭ་མི་དམངས་སྤྱི་མཐུན་རྒྱལ་ཁབ།)" # Tibetan (PRC)
+br_FR="brezhoneg (Frañs)" # Breton (France)
+bs_Cyrl="босански (Ћирилица)" # Bosnian (Cyrillic)
+bs_Latn="bosanski (Latinica)" # Bosnian (Latin)
+ca_ES="català (català)" # Catalan (Catalan)
+co_FR="Corsu (France)" # Corsican (France)
+cs_CZ="čeština (Česká republika)" # Czech (Czech Republic)
+cy_GB="Cymraeg (y Deyrnas Unedig)" # Welsh (United Kingdom)
+da_DK="dansk (Danmark)" # Danish (Denmark)
+de_AT="Deutsch (Österreich)" # German (Austria)
+de_CH="Deutsch (Schweiz)" # German (Switzerland)
+de_DE="Deutsch" # German (Germany)
+de_LI="Deutsch (Liechtenstein)" # German (Liechtenstein)
+de_LU="Deutsch (Luxemburg)" # German (Luxembourg)
+dsb="dolnoserbšćina" # Lower Sorbian
+dsb_DE="dolnoserbšćina (Nimska)" # Lower Sorbian (Germany)
+dv_MV="ދިވެހިބަސް (ދިވެހި ރާއްޖެ)‏" # Divehi (Maldives)‎
+el_GR="Ελληνικά (Ελλάδα)" # Greek (Greece)
+en_029="English (Caribbean)" # English (Caribbean)
+en_AU="English (Australia)" # English (Australia)
+en_BZ="English (Belize)" # English (Belize)
+en_CA="English (Canada)" # English (Canada)
+en_GB="English (U.K.)" # English (United Kingdom)
+en_IE="English (Ireland)" # English (Ireland)
+en_IN="English (India)" # English (India)
+en_JM="English (Jamaica)" # English (Jamaica)
+en_MY="English (Malaysia)" # English (Malaysia)
+en_NZ="English (New Zealand)" # English (New Zealand)
+en_PH="English (Philippines)" # English (Republic of the Philippines)
+en_SG="English (Singapore)" # English (Singapore)
+en_TT="English (Trinidad y Tobago)" # English (Trinidad and Tobago)
+en_US="English (U.S.)" # English (United States)
+en_ZA="English (South Africa)" # English (South Africa)
+en_ZW="English (Zimbabwe)" # English (Zimbabwe)
+es_AR="Español (Argentina)" # Spanish (Argentina)
+es_BO="Español (Bolivia)" # Spanish (Bolivia)
+es_CL="Español (Chile)" # Spanish (Chile)
+es_CO="Español (Colombia)" # Spanish (Colombia)
+es_CR="Español (Costa Rica)" # Spanish (Costa Rica)
+es_DO="Español (República Dominicana)" # Spanish (Dominican Republic)
+es_EC="Español (Ecuador)" # Spanish (Ecuador)
+es_ES="Español" # Spanish (Spain, International Sort)
+es_GT="Español (Guatemala)" # Spanish (Guatemala)
+es_HN="Español (Honduras)" # Spanish (Honduras)
+es_MX="Español (México)" # Spanish (Mexico)
+es_NI="Español (Nicaragua)" # Spanish (Nicaragua)
+es_PA="Español (Panamá)" # Spanish (Panama)
+es_PE="Español (Perú)" # Spanish (Peru)
+es_PR="Español (Puerto Rico)" # Spanish (Puerto Rico)
+es_PY="Español (Paraguay)" # Spanish (Paraguay)
+es_SV="Español (El Salvador)" # Spanish (El Salvador)
+es_US="Español (Estados Unidos)" # Spanish (United States)
+es_UY="Español (Uruguay)" # Spanish (Uruguay)
+es_VE="Español (Republica Bolivariana de Venezuela)" # Spanish (Venezuela)
+et_EE="eesti (Eesti)" # Estonian (Estonia)
+eu_ES="euskara (euskara)" # Basque (Basque)
+fa_IR="فارسى (ایران)‏" # Persian‎
+fi_FI="suomi (Suomi)" # Finnish (Finland)
+fil="Filipino" # Filipino
+fil_PH="Filipino (Pilipinas)" # Filipino (Philippines)
+fo_FO="føroyskt (Føroyar)" # Faroese (Faroe Islands)
+fr_BE="français (Belgique)" # French (Belgium)
+fr_CA="français (Canada)" # French (Canada)
+fr_CH="français (Suisse)" # French (Switzerland)
+fr_FR="français" # French (France)
+fr_LU="français (Luxembourg)" # French (Luxembourg)
+fr_MC="français (Principauté de Monaco)" # French (Monaco)
+fy_NL="Frysk (Nederlân)" # Frisian (Netherlands)
+ga_IE="Gaeilge (Éire)" # Irish (Ireland)
+gd_GB="Gàidhlig (An Rìoghachd Aonaichte)" # Scottish Gaelic (United Kingdom)
+gl_ES="galego (galego)" # Galician (Galician)
+gsw="Elsässisch" # Alsatian
+gsw_FR="Elsässisch (Frànkrisch)" # Alsatian (France)
+gu_IN="ગુજરાતી (ભારત)" # Gujarati (India)
+ha_Latn="Hausa (Latin)" # Hausa (Latin)
+he_IL="עברית (ישראל)‏" # Hebrew (Israel)‎
+hi_IN="हिंदी (भारत)" # Hindi (India)
+hr_BA="hrvatski (Bosna i Hercegovina)" # Croatian (Latin, Bosnia and Herzegovina)
+hr_HR="hrvatski (Hrvatska)" # Croatian (Croatia)
+hsb="hornjoserbšćina" # Upper Sorbian
+hsb_DE="hornjoserbšćina (Němska)" # Upper Sorbian (Germany)
+hu_HU="magyar (Magyarország)" # Hungarian (Hungary)
+hy_AM="Հայերեն (Հայաստան)" # Armenian (Armenia)
+id_ID="Bahasa Indonesia (Indonesia)" # Indonesian (Indonesia)
+ig_NG="Igbo (Nigeria)" # Igbo (Nigeria)
+ii_CN="ꆈꌠꁱꂷ (ꍏꉸꏓꂱꇭꉼꇩ)" # Yi (PRC)
+is_IS="íslenska (Ísland)" # Icelandic (Iceland)
+it_CH="italiano (Svizzera)" # Italian (Switzerland)
+it_IT="italiano (Italia)" # Italian (Italy)
+iu_Cans="ᐃᓄᒃᑎᑐᑦ (ᖃᓂᐅᔮᖅᐸᐃᑦ)" # Inuktitut (Syllabics)
+iu_Latn="Inuktitut (Qaliujaaqpait)" # Inuktitut (Latin)
+ja_JP="日本語 (日本)" # Japanese (Japan)
+ka_GE="ქართული (საქართველო)" # Georgian (Georgia)
+kk_KZ="Қазақ (Қазақстан)" # Kazakh (Kazakhstan)
+kl_GL="kalaallisut (Kalaallit Nunaat)" # Greenlandic (Greenland)
+km_KH="ខ្មែរ (កម្ពុជា)" # Khmer (Cambodia)
+kn_IN="ಕನ್ನಡ (ಭಾರತ)" # Kannada (India)
+ko_KR="한국어 (대한민국)" # Korean (Korea)
+kok="कोंकणी" # Konkani
+kok_IN="कोंकणी (भारत)" # Konkani (India)
+ky_KG="Кыргыз (Кыргызстан)" # Kyrgyz (Kyrgyzstan)
+lb_LU="Lëtzebuergesch (Luxembourg)" # Luxembourgish (Luxembourg)
+lo_LA="ລາວ (ສ.ປ.ປ. ລາວ)" # Lao (Lao P.D.R.)
+lt_LT="lietuvių (Lietuva)" # Lithuanian (Lithuania)
+lv_LV="latviešu (Latvija)" # Latvian (Latvia)
+mi_NZ="Reo Māori (Aotearoa)" # Maori (New Zealand)
+mk_MK="македонски јазик (Македонија)" # Macedonian (Former Yugoslav Republic of Macedonia)
+ml_IN="മലയാളം (ഭാരതം)" # Malayalam (India)
+mn_Cyrl="Монгол хэл" # Mongolian (Cyrillic)
+mn_MN="Монгол хэл (Монгол улс)" # Mongolian (Cyrillic, Mongolia)
+mn_Mong="ᠮᠤᠨᠭᠭᠤᠯ ᠬᠡᠯᠡ" # Mongolian (Traditional Mongolian)
+moh="Kanien'kéha" # Mohawk
+moh_CA="Kanien'kéha" # Mohawk (Mohawk)
+mr_IN="मराठी (भारत)" # Marathi (India)
+ms_BN="Bahasa Melayu (Brunei Darussalam)" # Malay (Brunei Darussalam)
+ms_MY="Bahasa Melayu (Malaysia)" # Malay (Malaysia)
+mt_MT="Malti (Malta)" # Maltese (Malta)
+nb_NO="norsk, bokmål (Norge)" # Norwegian, Bokmål (Norway)
+ne_NP="नेपाली (नेपाल)" # Nepali (Nepal)
+nl_BE="Nederlands (België)" # Dutch (Belgium)
+nl_NL="Nederlands (Nederland)" # Dutch (Netherlands)
+nn_NO="norsk, nynorsk (Noreg)" # Norwegian, Nynorsk (Norway)
+nso="Sesotho sa Leboa" # Sesotho sa Leboa
+nso_ZA="Sesotho sa Leboa (Afrika Borwa)" # Sesotho sa Leboa (South Africa)
+oc_FR="Occitan (França)" # Occitan (France)
+or_IN="ଓଡ଼ିଆ (ଭାରତ)" # Oriya (India)
+pa_IN="ਪੰਜਾਬੀ (ਭਾਰਤ)" # Punjabi (India)
+pl_PL="polski (Polska)" # Polish (Poland)
+prs="درى‏" # Dari‎
+prs_AF="درى (افغانستان)‏" # Dari (Afghanistan)‎
+ps_AF="پښتو (افغانستان)‏" # Pashto (Afghanistan)‎
+pt_BR="Português (Brasil)" # Portuguese (Brazil)
+pt_PT="português (Portugal)" # Portuguese (Portugal)
+qut="K'iche" # K'iche
+qut_GT="K'iche (Guatemala)" # K'iche (Guatemala)
+quz="runasimi" # Quechua
+quz_BO="runasimi (Qullasuyu)" # Quechua (Bolivia)
+quz_EC="runasimi (Ecuador)" # Quechua (Ecuador)
+quz_PE="runasimi (Piruw)" # Quechua (Peru)
+rm_CH="Rumantsch (Svizra)" # Romansh (Switzerland)
+ro_RO="română (România)" # Romanian (Romania)
+ru_RU="русский (Россия)" # Russian (Russia)
+rw_RW="Kinyarwanda (Rwanda)" # Kinyarwanda (Rwanda)
+sa_IN="संस्कृत (भारतम्)" # Sanskrit (India)
+sah="саха" # Yakut
+sah_RU="саха (Россия)" # Yakut (Russia)
+se_FI="davvisámegiella (Suopma)" # Sami, Northern (Finland)
+se_NO="davvisámegiella (Norga)" # Sami, Northern (Norway)
+se_SE="davvisámegiella (Ruoŧŧa)" # Sami, Northern (Sweden)
+si_LK="සිංහ (ශ්‍රී ලංකා)" # Sinhala (Sri Lanka)
+sk_SK="slovenčina (Slovenská republika)" # Slovak (Slovakia)
+sl_SI="slovenski (Slovenija)" # Slovenian (Slovenia)
+sma="åarjelsaemiengiele" # Sami (Southern)
+sma_NO="åarjelsaemiengiele (Nöörje)" # Sami, Southern (Norway)
+sma_SE="åarjelsaemiengiele (Sveerje)" # Sami, Southern (Sweden)
+smj="julevusámegiella" # Sami (Lule)
+smj_NO="julevusámegiella (Vuodna)" # Sami, Lule (Norway)
+smj_SE="julevusámegiella (Svierik)" # Sami, Lule (Sweden)
+smn="sämikielâ" # Sami (Inari)
+smn_FI="sämikielâ (Suomâ)" # Sami, Inari (Finland)
+sms="sääm´ǩiõll" # Sami (Skolt)
+sms_FI="sääm´ǩiõll (Lää´ddjânnam)" # Sami, Skolt (Finland)
+sq_AL="shqipe (Shqipëria)" # Albanian (Albania)
+sr_Cyrl="српски (Ћирилица)" # Serbian (Cyrillic)
+sr_Latn="srpski (Latinica)" # Serbian (Latin)
+sv_FI="svenska (Finland)" # Swedish (Finland)
+sv_SE="svenska (Sverige)" # Swedish (Sweden)
+sw_KE="Kiswahili (Kenya)" # Kiswahili (Kenya)
+syr="ܣܘܪܝܝܐ‏" # Syriac‎
+syr_SY="ܣܘܪܝܝܐ (سوريا)‏" # Syriac (Syria)‎
+ta_IN="தமிழ் (இந்தியா)" # Tamil (India)
+te_IN="తెలుగు (భారత దేశం)" # Telugu (India)
+tg_Cyrl="Тоҷикӣ" # Tajik (Cyrillic)
+th_TH="ไทย (ไทย)" # Thai (Thailand)
+tk_TM="türkmençe (Türkmenistan)" # Turkmen (Turkmenistan)
+tn_ZA="Setswana (Aforika Borwa)" # Setswana (South Africa)
+tr_TR="Türkçe (Türkiye)" # Turkish (Turkey)
+tt_RU="Татар (Россия)" # Tatar (Russia)
+tzm="Tamazight" # Tamazight
+tzm_Latn="Tamazight (Latin)" # Tamazight (Latin)
+tzm_Latn_DZ="Tamazight (Djazaïr)" # Tamazight (Latin, Algeria)
+ug_CN="(ئۇيغۇر يېزىقى (جۇڭخۇا خەلق جۇمھۇرىيىتى‏" # Uyghur (PRC)‎
+uk_UA="українська (Україна)" # Ukrainian (Ukraine)
+ur_PK="اُردو (پاکستان)‏" # Urdu (Islamic Republic of Pakistan)‎
+uz_Cyrl="Ўзбек" # Uzbek (Cyrillic)
+uz_Latn="U'zbek" # Uzbek (Latin)
+vi_VN="Tiếng Việt (Việt Nam)" # Vietnamese (Vietnam)
+wo_SN="Wolof (Sénégal)" # Wolof (Senegal)
+xh_ZA="isiXhosa (uMzantsi Afrika)" # isiXhosa (South Africa)
+yo_NG="Yoruba (Nigeria)" # Yoruba (Nigeria)
+zh_CN="中文(中华人民共和国)" # Chinese (Simplified, PRC)
+zh_HK="中文(香港特別行政區)" # Chinese (Traditional, Hong Kong S.A.R.)
+zh_Hans="中文(简体)" # Chinese (Simplified)
+zh_Hant="中文(繁體)" # Chinese (Traditional)
+zh_MO="中文(澳門特別行政區)" # Chinese (Traditional, Macao S.A.R.)
+zh_SG="中文(新加坡)" # Chinese (Simplified, Singapore)
+zh_TW="中文(台灣)" # Chinese (Traditional, Taiwan)
+zu_ZA="isiZulu (iNingizimu Afrika)" # isiZulu (South Africa)

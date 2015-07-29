@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>409.2</string>
+	<key>AMApplicationVersion</key>
+	<string>2.5</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#  ------- BEGIN: CUSTOMIZE
+ # Specify the voice to speak selected text with, as it appears in System Preferences.
+ # Note: There must be no spaces around the "=".
+voice=Vicki
+#  ------- END: CUSTOMIZE
+
+  # If `say` is running, we assume that a previous invocation is still speaking  
+  # and speaking should be *stopped*.
+  # Caveat: This will only work if either the original app from which speaking was initiated is still
+  #         frontmost with text selected, or, coincidentally, a now different frontmost app also has
+  #         text selected. Otherwise, this service won't be active.
+pgrep -x say &amp;&amp; { pkill -x say; exit; }
+
+# ---- BEGIN: Helper functions
+
+# See also: getVoiceInternals()
+getLegacyVoiceInternals() {
+
+  local internalVoiceName=${1// /}
+
+  # --- Begin: list of numeric creator and voice IDs for *legacy* voices.
+  # Note: Obtained by systematically making each legacy voice that is preinstalled on a US-English OS X 10.8.3 the default voice
+  #       and then examining ~/Library/Preferences/com.apple.speech.voice.prefs.plist
+  #       Legacy voices are those that do not have VoiceAttributes/VoiceSynthesizerNumericID and VoiceAttributes:VoiceNumericID keys in their
+  #       respective /System/Library/Speech/Voices/${voiceNameNoSpaces}.SpeechVoice/Contents/Info.plist files.
+  #       !! There is 1 EXCEPTION: The voice that System Preferences and its preferences file call "Pipe Organ" is just named 
+  #       !! "Organ" in the actual voice bundle's path and Info.plist file.
+  VoiceCreator_Agnes=1734437985
+  VoiceID_Agnes=300
+  VoiceCreator_Albert=1836346163
+  VoiceID_Albert=41
+  VoiceCreator_Alex=1835364215
+  VoiceID_Alex=201
+  VoiceCreator_BadNews=1836346163
+  VoiceID_BadNews=36
+  VoiceCreator_Bahh=1836346163
+  VoiceID_Bahh=40
+  VoiceCreator_Bells=1836346163
+  VoiceID_Bells=26
+  VoiceCreator_Boing=1836346163
+  VoiceID_Boing=16
+  VoiceCreator_Bruce=1734437985
+  VoiceID_Bruce=100
+  VoiceCreator_Bubbles=1836346163
+  VoiceID_Bubbles=50
+  VoiceCreator_Cellos=1836346163
+  VoiceID_Cellos=35
+  VoiceCreator_Deranged=1836346163
+  VoiceID_Deranged=38
+  VoiceCreator_Fred=1836346163
+  VoiceID_Fred=1
+  VoiceCreator_GoodNews=1836346163
+  VoiceID_GoodNews=39
+  VoiceCreator_Hysterical=1836346163
+  VoiceID_Hysterical=30
+  VoiceCreator_Junior=1836346163
+  VoiceID_Junior=4
+  VoiceCreator_Kathy=1836346163
+  VoiceID_Kathy=2
+  VoiceCreator_Organ=1836346163 # !! Shows up as "*Pipe *Organ" in System Preferences and preferences file.
+  VoiceID_Organ=31
+  VoiceCreator_Princess=1836346163
+  VoiceID_Princess=3
+  VoiceCreator_Ralph=1836346163
+  VoiceID_Ralph=5
+  VoiceCreator_Trinoids=1836346163
+  VoiceID_Trinoids=9
+  VoiceCreator_Vicki=1835364215
+  VoiceID_Vicki=200
+  VoiceCreator_Victoria=1734437985
+  VoiceID_Victoria=200
+  VoiceCreator_Whisper=1836346163
+  VoiceID_Whisper=6
+  VoiceCreator_Zarvox=1836346163
+  VoiceID_Zarvox=8
+  # --- End: list of numeric creator and voiced IDs for *legacy* voices
+
+  vName_VoiceCreator="VoiceCreator_$internalVoiceName"
+  vName_VoiceID="VoiceID_$internalVoiceName"
+
+  VoiceCreator=${!vName_VoiceCreator}
+  VoiceID=${!vName_VoiceID}
+
+}
+
+# Determines the internal identifiers of a voice, given as its friendly name,
+# as (partially) needed to set a given voice as the default voice.
+# Sets the following script-global variables:
+#   InternalVoiceName
+#   VoiceCreator
+#   VoiceID
+getVoiceInternals() {
+
+  local friendlyVoiceName=$1 plistFile
+
+  # Locate the voice-specific Info.plist file (as of OS X 10.8.3)
+  # Note: Some voice names have embedded spaces, but their corresponding folder names have the spaces removed.
+  #       !! We assume a case-insensitive filesystem.
+  plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}.SpeechVoice/Contents/Info.plist"
+  # !! As of at least 10.10, there are compressed variants that have root folder-name suffix 'Compact'.
+  # !! These are lower-quality versions with smaller footprint; we use them only if the higher-quality ones aren't available.
+  [[ ! -f $plistFile ]] &amp;&amp; plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}Compact.SpeechVoice/Contents/Info.plist"
+
+  if [[ ! -f $plistFile ]]; then
+    # !! There is 1 EXCEPTION to the voice-name-to-filename mapping: "Pipe Organ" doesn't become "PipeOrgan", but just "Organ".
+    grep -Ei "^pipeorgan$" &lt;&lt;&lt;"${friendlyVoiceName// /}" &amp;&gt; /dev/null &amp;&amp; plistFile="/System/Library/Speech/Voices/Organ.SpeechVoice/Contents/Info.plist"
+    # If (ultimately) not found, abort.
+    [[ -f $plistFile ]] || { echo "'$friendlyVoiceName' is not an installed voice." &gt;&amp;2; return 1; }
+  fi
+
+  # Determine the relevant IDs we need to switch the default voice.
+  # Note: We're setting *script-global* variables here.
+  InternalVoiceName=$(/usr/libexec/PlistBuddy -c "print :CFBundleName" $plistFile) || { echo "Voice '$friendlyVoiceName': failed to obtain internal voice name." &gt;&amp;2; return 1; }
+  # !! For *compact* voices, $InternalVoiceNames will have suffix 'Compact', which we remove here, because
+  # !! this suffix shows up nowhere else.
+  # !! Key CFBundleName contains the same value as key VoiceName; however, only recent voices have the latter.
+  # !! Similarly, only recent voices have key VoiceNameRoot, which, in the case of compact voices, also contains the voice name with suffix 'Compact' removed.
+  InternalVoiceName=${InternalVoiceName%Compact}
+
+  VoiceCreator=$(/usr/libexec/PlistBuddy -c "print :VoiceAttributes:VoiceSynthesizerNumericID" "$plistFile" 2&gt;/dev/null) 
+  if [[ $? -ne 0 ]]; then # Must be a *legacy* voice - we take VoiceCreator and VoiceID from a hard-coded list.
+    getLegacyVoiceInternals "$InternalVoiceName"
+    [[ -n $VoiceCreator &amp;&amp; -n $VoiceID ]] || { echo "Voice '$friendlyVoiceName': failed to obtain numeric creator and/or voice IDs." &gt;&amp;2; return 1; }
+  else
+    VoiceID=$(/usr/libexec/PlistBuddy -c "print :VoiceAttributes:VoiceNumericID" "$plistFile" 2&gt;/dev/null) || { echo "Voice '$friendlyVoiceName': failed to obtain numeric voice ID." &gt;&amp;2; return 1; }
+  fi
+
+}
+# ---- END: Helper functions
+
+# ---- BEGIN: Support for custom speaking rates configured via System Preferences
+
+# Sadly, as of OSX 10.11, `say` doesn't respect custom speaking rates when used with an explicit voice name (-v), so
+# we have to extract the custom rates ourselves and specify them explicitly with -r.
+
+rateOpts=()
+
+# Get all custom speaking rates (words per minute) from the preferences file - on a pristine system, not even the file may exist, let alone custom rates).
+# Strip all chars. so that only (voice-creator, voice-ID, custom-rate) triplets of lines remain; e.g.:
+#   1886745202  # voice creator
+#   184844493   # voice ID
+#   200          # speaking rate; a value *roughly* &gt;= 90 &lt;= 360 - in practice I've seen at least slightly lower (87)
+customRates=$(defaults read com.apple.speech.voice.prefs VoiceRateDataArray | tr -d '() ,' 2&gt;/dev/null | sed '/^$/d' )
+
+if [[ -n $customRates ]]; then
+
+	# Get internal identifiers for the target voice.
+	getVoiceInternals "$voice"
+
+	# Extract the custom speaking rate for the target voice, if any.
+	customRate=$(awk -v first="$VoiceCreator" -v second="$VoiceID" '$1 == second  &amp;&amp; prev == first { getline; print $1; exit } { prev = $1 }' &lt;&lt;&lt;"$customRates")
+
+	(( customRate &gt; 0 )) &amp;&amp; rateOpts=( -r "$customRate" )
+
+fi
+# ---- END: Support for custom speaking rates
+
+  # Read the text to speak into a variable.
+txt=$(&lt;/dev/stdin)
+
+  # Speak, using the standard `say` CLI.
+say -v "$voice" "${rateOpts[@]}" "$txt"
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>0</integer>
+					<key>shell</key>
+					<string>/bin/bash</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>90521F3E-53A1-4C9C-8091-34CA970A8EB8</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>3276CD3A-C5C8-4EE5-A9EF-714DE43A53B4</string>
+				<key>UUID</key>
+				<string>FCC39CF7-1152-4AB7-BC81-7A8F1CE617FE</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>781.000000:1128.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>

@@ -174,7 +174,7 @@ fi
 # See also: getVoiceInternals()
 getLegacyVoiceInternals() {
 
-  local internalVoiceName=${1// /}
+  local internalVoiceName=$1
 
   # --- Begin: list of numeric creator and voice IDs for *legacy* voices.
   # Note: Obtained by systematically making each legacy voice that is preinstalled on a US-English OS X 10.8.3 the default voice
@@ -249,22 +249,22 @@ getLegacyVoiceInternals() {
 #   VoiceID
 getVoiceInternals() {
 
-  local friendlyVoiceName=$1 plistFile
+  local friendlyVoiceName=$1 plistFile internalVoiceName
+
+  # Get the internal voice name - note that this one may not be case-exact,
+  # which is why extract the exact case from the Info.plist file below
+  # and store in global var. $InternalVoiceName (note the uppercase first letter).
+  internalVoiceName=$(friendlyToInternalVoiceName "$friendlyVoiceName")
 
   # Locate the voice-specific Info.plist file (as of OS X 10.8.3)
-  # Note: Some voice names have embedded spaces, but their corresponding folder names have the spaces removed.
   #       !! We assume a case-insensitive filesystem.
-  plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}.SpeechVoice/Contents/Info.plist"
+  plistFile="/System/Library/Speech/Voices/${internalVoiceName}.SpeechVoice/Contents/Info.plist"
   # !! As of at least 10.10, there are compressed variants that have root folder-name suffix 'Compact'.
   # !! These are lower-quality versions with smaller footprint; we use them only if the higher-quality ones aren't available.
-  [[ ! -f $plistFile ]] && plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}Compact.SpeechVoice/Contents/Info.plist"
+  [[ ! -f $plistFile ]] && plistFile="/System/Library/Speech/Voices/${internalVoiceName}Compact.SpeechVoice/Contents/Info.plist"
 
-  if [[ ! -f $plistFile ]]; then
-    # !! There is 1 EXCEPTION to the voice-name-to-filename mapping: "Pipe Organ" doesn't become "PipeOrgan", but just "Organ".
-    grep -Ei "^pipeorgan$" <<<"${friendlyVoiceName// /}" &> /dev/null && plistFile="/System/Library/Speech/Voices/Organ.SpeechVoice/Contents/Info.plist"
-    # If (ultimately) not found, abort.
-    [[ -f $plistFile ]] || die "'$friendlyVoiceName' is not an installed voice."
-  fi
+  # If (ultimately) not found, abort.
+  [[ -f $plistFile ]] || die "'$friendlyVoiceName' is not an installed voice."
 
   # Determine the relevant IDs we need to switch the default voice.
   # Note: We're setting *script-global* variables here.
@@ -402,9 +402,9 @@ EOF
 #   - as part of bundle IDs stored in keys inside ~/Library/Preferences/com.apple.speech.voice.prefs.plist
 #   - as folder names in /System/Library/Speech/Voices/{internalVoiceName}(Compact)?.SpeechVoice
 #   - in these folders' ./Contents/Info.plist files as the values of CFBundleName/VoiceName/VoiceNameRoot keys
-#     VoiceNameRoot, if present contains the mere internal voice name (stripped of any 'Compact' suffix)
-#     VoiceName, if present, and CFBundleName do have the 'Compact' suffix for low-quality voices, if applicable.
-#     Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
+#     - VoiceNameRoot, if present contains the mere internal voice name (stripped of any 'Compact' suffix)
+#     - VoiceName, if present, and CFBundleName do have the 'Compact' suffix for low-quality voices, if applicable.
+#     - Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
 #      
 # Friendly voice names occur in the following places:
 #  - in System Preferences, in the TTS (Dictation & Speech) and VoiceOver (Accessibility) settings
@@ -440,6 +440,24 @@ internalToFriendlyVoiceName() (
   done < <( (( $# > 0 )) && printf '%s\n' "$@" || cat )
 )
 
+# Inverse of internalToFriendlyVoiceName()
+friendlyToInternalVoiceName() {
+  
+  # The internal voice name is generally just the friendly one with spaces removed.
+  # Only 2 voices, which are legacy voices, have spaces in their friendly names: 'Good News' and 'Pipe Organ'
+  # Presumably, no future voices will have embedded spaces.
+  local internalVoiceName=${1// /}
+
+  # There's one exception: friendly name 'Pipe Organ' maps to just 'Organ'.
+  case $internalVoiceName in
+    'PipeOrgan')
+      internalVoiceName='Organ'
+      ;;
+  esac
+
+  printf '%s\n' "$internalVoiceName"
+
+}
 
 # Caches the custom speaking rates from com.apple.speech.voice.prefs for *this shell session only*.
 # in global variable

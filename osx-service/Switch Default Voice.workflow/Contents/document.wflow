@@ -59,66 +59,152 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string># ----------- BEGIN: CUSTOMIZE HERE
-#
-# NOTE: Be sure to retain the parenthese around the values, and to have no spaces around "=".
+					<string>#!/usr/bin/env bash
 
-  # The default voices to switch between and the respective confirmation text to speak.
-voices=(         Alex                     Vicki )
-confirmations=( 'Switched to $newVoice.' 'Switched to $newVoice.' )
+# Home page: https://github.com/mklement0/voices#osx-service-for-switching-between-default-voices
 
-  # The default is to give spoken feedback after changing the voice and when errors occur.
-  # Set to 0 to disable this, but note that it's helpful to get audible feedback to know when the switch has completed.
-voiceFeedback=1
-
-# ----------- END: CUSTOMIZE HERE
-
-# Helper functions. Note that `say` must come *before* `display alert`, because the latter blocks until the dialog is confirmed.
-die() { local msg="ERROR: ${1-Aborting due to unexpected error}"; (( voiceFeedback )) &amp;&amp; say "$msg"; osascript -e 'display alert "'"$msg"'" as critical'; exit 1; }
-alert() { local msg=$1; (( voiceFeedback )) &amp;&amp; say "$msg"; osascript -e 'display alert "'"$msg"'" as informational';  } 
+# The FULL PATH OF THIS SERVICE'S CONFIGURATION FILE.
+# On first invocation of this service, it will open in your default text editor.
+kCONFIG_FILE=~/.SwitchDefaultVoice-rc
 
 # This workflow's name, which MUST BE IN SYNC WITH ITS BUNDLE FOLDER'S NAME.
 # !! Sadly, we cannot determine the path of the running workflow: $PWD is the user's home folder,
 # !! and $0 == '-', and $BASH_SOURCE is empty altogether.
 kTHIS_NAME='Switch Default Voice' 
 
-# Make sure that we can locate this workflow.
+# ---- BEGIN: helper functions
+
+# Helper functions. Note that `say` must come *before* `display alert`, because the latter blocks until the dialog is confirmed.
+die() { local msg="ERROR: ${1-Aborting due to unexpected error}"; (( voiceFeedback )) &amp;&amp; say "$msg"; osascript -e 'display alert "'"$msg"'" as critical'; exit 1; }
+alert() { local msg=$1; (( voiceFeedback )) &amp;&amp; say "$msg"; osascript -e 'display alert "'"$msg"'" as informational';  } 
+
+# SYNOPSIS
+#   indexOf [-i] needle "${haystack[@]}"
+# *Via stdout*, returns the zero-based index of a string element in an array of strings or -1, if not found.
+#   -i makes matching case-INsensitive.
+#  To be safe, specify -- in place of options if you don't need any.
+# Additionally, the exit code indicates if the element was found or not.
+# EXAMPLES
+#   a=('one' 'two' 'three')
+#   ndx=$(indexOf 'two' "${a[@]}") # -&gt; $ndx is now 1
+#   ndx=$(indexOf -i 'TWO' "${a[@]}") # -&gt; $ndx is now 1
+indexOf() ( # run in subshell to localize effect of shopt
+  local opt printElem=0 caseInsensitive=0 OPTARG= OPTIND=1
+  while getopts 'i' opt; do
+    case "$opt" in
+      '?') # unknown option
+        return 2
+        ;;
+      i)
+        shopt -s nocasematch
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1)) # Skip the already-processed arguments (options).
+
+  local i=0 el needle=$1; shift
+  for el; do [[ "$el" == "$needle" ]] &amp;&amp; {  echo "$i"; return 0; }; ((++i)); done
+  {  echo '-1'; return 1; }
+)
+
+# Outputs the specified voice's locale identifier; e.g., 'en_US'
+# Note that *legacy* voices have no locale identifier in their Info.plist files; it's probably safe to assume 'en_US'.
+getVoiceLocaleId() {
+  # Transform the friendly voice name into the internal one, which in most cases requires no action at all
+  # However, there are legacy voices whose names have embedded spaces, where the spaces must be removed, and
+  # in one case the mapping is irregular: 'Pipe Organ' must be transformed to 'Organ'.
+  local voiceName=${1// /} plistFile
+  [[ $voiceName == 'PipeOrgan' ]] &amp;&amp; voiceName='Organ'
+  # Locate the voice-specific Info.plist file (as of OS X 10.8.3)
+  #       !! We assume a case-insensitive filesystem.
+  plistFile="/System/Library/Speech/Voices/${voiceName}.SpeechVoice/Contents/Info.plist"
+  # !! As of at least 10.10, there are compressed variants that have root folder-name suffix 'Compact'.
+  # !! These are lower-quality versions with smaller footprint; we use them only if the higher-quality ones aren't available.
+  [[ ! -f $plistFile ]] &amp;&amp; plistFile="/System/Library/Speech/Voices/${voiceName}Compact.SpeechVoice/Contents/Info.plist"
+  /usr/libexec/PlistBuddy "$plistFile" -c 'print VoiceAttributes:VoiceLocaleIdentifier'
+}
+
+# ---- END: helper functions
+
+# Make sure that we can locate this workflow among the installed ones.
 kTHIS_FULL_PATH=
 for parentDir in ~/Library/Services /Library/Services; do
-	dir="$parentDir/$kTHIS_NAME.workflow"
-	[[ -d $dir ]] &amp;&amp; { kTHIS_FULL_PATH=$dir; break; }
+  dir="$parentDir/$kTHIS_NAME.workflow"
+  [[ -d $dir ]] &amp;&amp; { kTHIS_FULL_PATH=$dir; break; }
 done
-
 [[ -n $kTHIS_FULL_PATH ]] || die "This service workflow is either not currently installed, or had its name changed from '$kTHIS_NAME'."
 
-# Full path to the embedded `voices` CLI, which we manually copied there.
+# Determine the full path to the embedded `voices` CLI, which we manually copied there.
 voicesExe=$kTHIS_FULL_PATH/Contents/net.same2u/voices
 
-# Ensure existence of supporting utility
+# Ensure existence of `voices`.
 [[ -f $voicesExe ]] || die "Required supporting utility not found: $voicesExe"
 # Make executable on demand, if necessary.
 [[ -x $voicesExe ]] || chmod +x "$voicesExe" || die "Failed to make supporting utility executable: $voicesExe"
 
+# Read config file.
+# If the settings file doesn't exist, create it now with defaults.
+if [[ ! -f $kCONFIG_FILE ]]; then
+
+  # The default config file embedded in this service.
+  configFileDefault=$kTHIS_FULL_PATH/Contents/net.same2u/.SwitchDefaultVoice-rc
+
+  # Prompt for opening the configuration file in the default text editor.
+  # If the user declines, we exit here (pressing Cancel makes AppleScript throw a runtime error that make osascript report a nonzero exit code).
+  # Note that we prompt BEFORE copying the default config file to ~, because the default
+  # file would otherwise be in place already next time and the prompt wouldn't show again.
+  osascript -s s &amp;&gt;/dev/null  &lt;&lt;EOF || exit 0
+    display dialog "You need to configure this service by specifying which voices to switch between." &amp; return &amp; return &amp; "IMPORTANT: Make a note of the configuration file's path in case you need to edit it again later:" &amp; return &amp; "$kCONFIG_FILE" &amp; return &amp; return &amp; "Press OK to open the configuration file in your default text editor now." with icon note
+EOF
+
+  # Copy the default config file to ~
+  cp "$configFileDefault" "$kCONFIG_FILE" || die "Failed to copy default configuration file to $kCONFIG_FILE"
+
+  # Open config file in default text editor and exit.
+  open -t "$kCONFIG_FILE"; exit
+fi
+
+# Initialize variables - but don't preset voices: we want to make sure that the config file contains valid settings.
+valid=1 voices=() confirmations= voiceFeedback=1
+# Simply *source* the config file.
+. "$kCONFIG_FILE" || valid=0
+numVoices=${#voices[@]}
+(( numVoices &gt; 1 )) || valid=0
+(( valid )) || die "Config file $kCONFIG_FILE either contains a syntax error or is missing information. Please fix it, or delete it to have it recreated with defaults."
+
 # Determine current default voice.
 # !! This should only fail in ONE scenario: a pristine machine on which the default voice was never changed, where
-# !! /Users/jdoe/Library/Preferences/com.apple.speech.voice.prefs.plist therefore doesn't reflect the default (no "SelectedVoiceName" entry).
-# !! We simply ignore this, and hope that there's truly no other scenario where this fails.
-currentVoice=$("$voicesExe" -b)
+# !! /Users/jdoe/Library/Preferences/com.apple.speech.voice.prefs.plist therefore doesn't even exist or doesn't
+# !! reflect the default (no "SelectedVoiceName" entry). We simply ignore this, and hope that there's truly no other scenario where this fails.
+currentVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName 2&gt;/dev/null)
 
-# Switch to the respective other default voice.
+# -- Determine the next voice (cyclically) to switch to.
+shopt -s nocasematch # Ignore differences in case.
 
-shopt -s nocasematch # Ignor differences in case.
+# Determine index of the next voice.
+newNdx=$(( ($(indexOf "$currentVoice" "${voices[@]}") + 1) % numVoices ))
 
-# Determine index of the other voice.
-newNdx=0
-[[ $currentVoice == "${voices[0]}" ]] &amp;&amp; newNdx=1
-
-# Determine new voice name and confirmation message.
+# Determine new voice name ... 
 newVoice=${voices[newNdx]}
-confirmation=${confirmations[newNdx]//\$newVoice/$newVoice}
+
+# ...and the confirmation message to speak.
+# In the absence of a confirmation message we simply speak the new voice name by default.
+confirmation=${confirmations[newNdx]} # look for specific array entry
+[[ -z $confirmation ]] &amp;&amp; confirmation="${confirmations[0]}" # otherwise, apply scalar value to all voices, if defined.
+[[ -z $confirmation ]] &amp;&amp; confirmation='$newLang' # by default, we speak the localized name of the new voice's language
+
+[[ $confirmation == *'$newVoice'* ]] &amp;&amp; confirmation=${confirmation//\$newVoice/$newVoice}
+if [[ $confirmation == *'$newLang'* ]]; then # text contains localized name of the new language.
+  localeId=$(getVoiceLocaleId "$newVoice") # get locale ID
+  [[ -z $localeId ]] &amp;&amp; localeId='en_US' # legacy voices have no locale identifier in their Info.plist files; we assume US English.
+  newLang=${!localeId} # the locale ID should be the name of a variable defined via sourcing the config file, and that variable's value is the localized language name
+  [[ -z $newLang ]] &amp;&amp; newLang=$localeId # fallback: use the locale ID
+  [[ -z $newLang ]] &amp;&amp; newLang=$newVoice # ultimate fallback: use the voice name.
+  confirmation=${confirmation//\$newLang/$newLang}
+fi
 
 # Make the change.
-"$voicesExe" -d "$newVoice" || die "Failed to change the default voice."
+"$voicesExe" -q -d "$newVoice" || die "Failed to change the default voice."
 
 # Speak the confirmation, if requested.
 # !! Note that we use `say` without -v, relying on the fact that the default voice has already been switched, which has the
@@ -237,7 +323,7 @@ confirmation=${confirmations[newNdx]//\$newVoice/$newVoice}
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>781.000000:617.000000</string>
+				<string>781.000000:1296.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>

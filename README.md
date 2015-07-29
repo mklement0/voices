@@ -34,8 +34,11 @@
 
 _Caveat_: As of OSX 10.11 (El Capitan), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
 
-Additionally, a **self-contained OSX service for switching between two default
-voices** is offered [below](#osx-service-for-switching-between-default-voices).
+Additionally, two **OSX Services** are offered:
+
+* a **service for switching between two default
+voices** - see [below](#osx-service-for-switching-between-default-voices).
+* a **service for speaking selected text with a specific voice** - see [below](#osx-service-for-speaking-selected-text-with-a-specific-voice)
 
 # Examples
 
@@ -250,28 +253,66 @@ EXAMPLES
 
 # OSX Service for switching between default voices
 
-This service, which uses an embedded copy of `voices`, is helpful if you use text-to-speech in two languages and want to quickly
-switch the default voice back and forth between two designated voices.
+This service, which uses an embedded copy of `voices`, is helpful if you use text-to-speech in two or more languages and want to quickly
+switch the default voice between multiple designated voices cyclically.
 
-You can invoke it from the standard `Services` menu or assign it a
-keyboard shortcut via `System Preferences > Keyboard > Shortcuts`.
+Every time the service is invoked, the next designated voice is made the default voice, and the localized name of the new voice's
+language is spoken to confirm the change by default.
+
+You can invoke the service from the standard `Services` menu of any application, or assign it a keyboard shortcut via
+`System Preferences > Keyboard > Shortcuts > Services`.
 
 ## Installation
 
 * Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Switch Default Voice.workflow.zip).
 * In Finder, open the ZIP file, which creates package `Switch Default Voice.workflow` in the same folder.
 * Open `Switch Default Voice.workflow` and choose `Install` when prompted - this will place the package in `~/Library/Services/`.
+* Choose `Done` when prompted and proceed with customization below.
+
+## Customization
+
+* Invoke the service for the first time to prompt creating and editing the configuration file.
+  * From any application, open that application's menu and select `Services > Switch Default Voice`.
+  * You will be prompted to edit the configuration file, where you can specify the voices to switch between; follow the instructions in the file.
+* To assign a keyboard shortcut to the service, go to `System Preferences > Keyboard > Shortcuts`, category `Services`,
+  scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click near the right edge of the list item.
+* To customize the service again later, open `~/.SwitchDefaultVoice-rc` in your text editor.
+
+# OSX Service for speaking selected text with a specific voice
+
+This service is helpful if you want the ability to speak selected text in the 
+frontmost application with a fixed alternate voice, to complement the built-in
+service that uses the default voice (see `System Preferences > Dictation & Speech > Text to Speech`).
+This is an alternative to switching the default voice.
+
+For instance, you could customize this service to speak selected text with a voice
+that speaks a different language.
+
+You can invoke it from the standard `Services` menu whenever text is selected in the frontmost application, or assign it a
+keyboard shortcut via `System Preferences > Keyboard > Shortcuts > Services`; e.g., `` ⌥` `` (Opt-\`) to parallel the default shortcut for
+the built-in service, `⌥⎋` (Opt-Esc).
+
+Invoking the service again while text from a previous invocation is still being spoken aborts speaking.  
+_Caveat_: This only works if you haven't switched to a different application or removed the text selection since speaking started.
+
+If desired, you can duplicate the service so as to be able to speak with one of _multiple_ alternate voices:  
+Once installed, duplicate `~/Library/Services/Speak With Specific Voice.workflow` in Finder, give it a meaningful name, 
+and customize the duplicate as described below.
+
+## Installation
+
+* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Speak With Specific Voice.workflow.zip).
+* In Finder, open the ZIP file, which creates package `Speak With Specific Voice.workflow` in the same folder.
+* Open `Speak With Specific Voice.workflow` and choose `Install` when prompted - this will place the package in `~/Library/Services/`.
 * Choose `Open in Automator` when prompted and proceed with customization below.
 
 ## Customization
 
-* In Automator, follow the instructions at the top of the document, notably in order to specify what voices to switch back and forth between
-  * Apply your customizations between the lines `# ----------- BEGIN: CUSTOMIZE HERE` and `# ----------- END: CUSTOMIZE HERE`.
-  * Test by pressing the `Run` toolbar button (playback icon). Note that trying to change the default voice quickly in succession introduces a delay.
+* In Automator, follow the instructions at the top of the document, which currently only require you to specify the name of the desired voice.
+  * Apply your customizations between the lines `#  ------- BEGIN: CUSTOMIZE` and `#  ------- END: CUSTOMIZE`.
 * To assign a keyboard shortcut, go to `System Preferences > Keyboard > Shortcuts`, category `Services`, scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click near the right edge of the list item.
-* To customize the service again later, open `~/Library/Services/Switch Default Voice.workflow` in Automator.
+* To customize the service again later, open `~/Library/Services/Speak With Specific Voice.workflow` in Automator.
   * If you have trouble navigating to `~/Library`, activate Finder, hold down the Option key while selecting the `Go` menu, and select `Library`; from there, navigate to subfolder `Services` and open package `Switch Default Voice.workflow`.
-
 
 <!-- DO NOT EDIT THE NEXT CHAPTER and RETAIN THIS COMMENT: The next chapter is updated by `make update-readme/release` with the contents of 'LICENSE.md'. ALSO, LEAVE AT LEAST 1 BLANK LINE AFTER THIS COMMENT. -->
 

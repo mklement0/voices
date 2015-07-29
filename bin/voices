@@ -144,11 +144,6 @@ NOTES
   Note that the related VoiceOver accessibility feature has its own default
   voice, which is not changed by this utility.
 
-  CAVEAT: As of OSX 10.11, due to a limitation in the underlying \`say\`
-          utility, custom speaking rates (words per minute) configured via
-          System Preferences are not honored when producing spoken output with
-          the -k option.
-          
 EXAMPLES
     # List all active voices; add -a to list all installed ones.
   $kTHIS_NAME -l         
@@ -179,7 +174,7 @@ fi
 # See also: getVoiceInternals()
 getLegacyVoiceInternals() {
 
-  local internalVoiceName=${1// /}
+  local internalVoiceName=$1
 
   # --- Begin: list of numeric creator and voice IDs for *legacy* voices.
   # Note: Obtained by systematically making each legacy voice that is preinstalled on a US-English OS X 10.8.3 the default voice
@@ -254,22 +249,22 @@ getLegacyVoiceInternals() {
 #   VoiceID
 getVoiceInternals() {
 
-  local friendlyVoiceName=$1 plistFile plistFileNew
+  local friendlyVoiceName=$1 plistFile internalVoiceName
+
+  # Get the internal voice name - note that this one may not be case-exact,
+  # which is why extract the exact case from the Info.plist file below
+  # and store in global var. $InternalVoiceName (note the uppercase first letter).
+  internalVoiceName=$(friendlyToInternalVoiceName "$friendlyVoiceName")
 
   # Locate the voice-specific Info.plist file (as of OS X 10.8.3)
-  # Note: Some voice names have embedded spaces, but their corresponding folder names have the spaces removed.
   #       !! We assume a case-insensitive filesystem.
-  plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}.SpeechVoice/Contents/Info.plist"
+  plistFile="/System/Library/Speech/Voices/${internalVoiceName}.SpeechVoice/Contents/Info.plist"
   # !! As of at least 10.10, there are compressed variants that have root folder-name suffix 'Compact'.
   # !! These are lower-quality versions with smaller footprint; we use them only if the higher-quality ones aren't available.
-  [[ ! -f $plistFile ]] && plistFile="/System/Library/Speech/Voices/${friendlyVoiceName// /}Compact.SpeechVoice/Contents/Info.plist"
+  [[ ! -f $plistFile ]] && plistFile="/System/Library/Speech/Voices/${internalVoiceName}Compact.SpeechVoice/Contents/Info.plist"
 
-  if [[ ! -f $plistFile ]]; then
-    # !! There is 1 EXCEPTION to the voice-name-to-filename mapping: "Pipe Organ" doesn't become "PipeOrgan", but just "Organ".
-    grep -Ei "^pipeorgan$" <<<"${friendlyVoiceName// /}" &> /dev/null && plistFile="/System/Library/Speech/Voices/Organ.SpeechVoice/Contents/Info.plist"
-    # If (ultimately) not found, abort.
-    [[ -f $plistFile ]] || die "'$friendlyVoiceName' is not an installed voice."
-  fi
+  # If (ultimately) not found, abort.
+  [[ -f $plistFile ]] || die "'$friendlyVoiceName' is not an installed voice."
 
   # Determine the relevant IDs we need to switch the default voice.
   # Note: We're setting *script-global* variables here.
@@ -407,9 +402,9 @@ EOF
 #   - as part of bundle IDs stored in keys inside ~/Library/Preferences/com.apple.speech.voice.prefs.plist
 #   - as folder names in /System/Library/Speech/Voices/{internalVoiceName}(Compact)?.SpeechVoice
 #   - in these folders' ./Contents/Info.plist files as the values of CFBundleName/VoiceName/VoiceNameRoot keys
-#     VoiceNameRoot, if present contains the mere internal voice name (stripped of any 'Compact' suffix)
-#     VoiceName, if present, and CFBundleName do have the 'Compact' suffix for low-quality voices, if applicable.
-#     Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
+#     - VoiceNameRoot, if present contains the mere internal voice name (stripped of any 'Compact' suffix)
+#     - VoiceName, if present, and CFBundleName do have the 'Compact' suffix for low-quality voices, if applicable.
+#     - Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
 #      
 # Friendly voice names occur in the following places:
 #  - in System Preferences, in the TTS (Dictation & Speech) and VoiceOver (Accessibility) settings
@@ -445,20 +440,82 @@ internalToFriendlyVoiceName() (
   done < <( (( $# > 0 )) && printf '%s\n' "$@" || cat )
 )
 
+# Inverse of internalToFriendlyVoiceName()
+friendlyToInternalVoiceName() {
+  
+  # The internal voice name is generally just the friendly one with spaces removed.
+  # Only 2 voices, which are legacy voices, have spaces in their friendly names: 'Good News' and 'Pipe Organ'
+  # Presumably, no future voices will have embedded spaces.
+  local internalVoiceName=${1// /}
+
+  # There's one exception: friendly name 'Pipe Organ' maps to just 'Organ'.
+  case $internalVoiceName in
+    'PipeOrgan')
+      internalVoiceName='Organ'
+      ;;
+  esac
+
+  printf '%s\n' "$internalVoiceName"
+
+}
+
+# Caches the custom speaking rates from com.apple.speech.voice.prefs for *this shell session only*.
+# in global variable
+#    $customSpeakingRates
+# $customSpeakingRates is filled - once for this shell - as follows:
+#   Get all custom speaking rates (words per minute) from the preferences file - on a pristine system, not even the file may exist, let alone custom rates).
+#   Strip all chars. so that only (voice-creator, voice-ID, custom-rate) line triplets remain; e.g.:
+#     1886745202  # voice creator
+#     184844493   # voice ID
+#     200          # speaking rate; a value *roughly* >= 90 <= 360
+getCachedCustomSpeakingRates() {
+  [[ -z $customSpeakingRates && -n ${customSpeakingRates-unset} ]] && customSpeakingRates=$(defaults read com.apple.speech.voice.prefs VoiceRateDataArray 2>/dev/null | tr -d '() ,'  | sed '/^$/d' )
+}
+
+# Outputs the custom speaking rate for the specified voice, if it is defined - range is *roughly* between 90 and 360 - apparently, it's possible to at least get slightly lower.
+# If not defined, outputs nothing.
+getCustomSpeakingRate() {
+  local voice=$1 customRate
+  
+  # Set global variable $customSpeakingRates to contain any defined custom-speaking rates as 
+  # (voice-creator, voice-ID, custom-rate) line triplets.
+  getCachedCustomSpeakingRates
+
+  if [[ -n $customSpeakingRates ]]; then # short-circuit if there are no custom speaking rates at all
+
+    # Get (cached) internal identifiers for the target voice.
+    # NOTE: This is fairly time-consuming operation.
+    # This sets global variables InternalVoiceName, VoiceCreator, VoiceID
+    getVoiceInternals "$voice"
+
+    # Extract the custom speaking rate, if any, for the target voice.
+    customRate=$(awk -v first="$VoiceCreator" -v second="$VoiceID" '$1 == second  && prev == first { getline; print $1; exit } { prev = $1 }' <<<"$customSpeakingRates")
+
+    echo "$customRate"
+
+  fi
+}
+
+
 # SYNOPSIS
 #   speakText friendlyVoiceName [text]
 # If <text> is missing or empty, the demo text is spoken.
 speakText() {
-  local friendlyVoiceName=$1 text=$2
+  local friendlyVoiceName=$1 text=$2 rateOpts
 
   if [[ -z $text ]]; then # No text specified? Use demo text.
     text=$(say -v \? | egrep -i "^$friendlyVoiceName +[a-z]{2}[_-]\w+ +#" | awk -F '#' '{ print $2; }')
   fi
 
-  # !! As of OSX 10.10.4 and in the 10.11 betas, `say`, when used with `-v`,
-  # !! unfortunately doesn't honor a custom speaking rate configured for the target voice
-  # !! in System Preferences. Feedback given via the 10.11 beta feedback assistant on 27 Jul 2015.
-  say -v "$friendlyVoiceName" -- "$text"
+  # !! Sadly, as of OSX 10.11, `say` doesn't respect custom speaking rates defined in System Preferences 
+  # !! when used with an explicit voice name (-v) (reported to Apple, 
+  # !! so we have to extract the custom rates ourselves and specify them explicitly with -r.
+  # !! Should `say` ever become custom-rate aware, this will no longer be needed.
+  rateOpts=()
+  customRate=$(getCustomSpeakingRate "$friendlyVoiceName")
+  (( customRate > 0 )) && rateOpts=( -r "$customRate" )
+
+  say -v "$friendlyVoiceName" "${rateOpts[@]}" -- "$text"
 }
 
 openTtsSystemPrefs() {
