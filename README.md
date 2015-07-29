@@ -14,6 +14,9 @@
 - [OSX Service for switching between default voices](#osx-service-for-switching-between-default-voices)
   - [Installation](#installation-1)
   - [Customization](#customization)
+- [OSX Service for speaking selected text with a specific voice](#osx-service-for-speaking-selected-text-with-a-specific-voice)
+  - [Installation](#installation-2)
+  - [Customization](#customization-1)
 - [License](#license)
   - [Acknowledgements](#acknowledgements)
   - [npm dependencies](#npm-dependencies)
@@ -23,7 +26,7 @@
 
 # voices &mdash; introduction
 
-`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech)** and for **printing information about and/or speaking text with multiple voices**.
+`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech) voice** and for **printing information about and/or speaking text with multiple voices**.
 
 `voices` complements the standard `say` utility by:
 
@@ -36,8 +39,7 @@ _Caveat_: As of OSX 10.11 (El Capitan), there is no documented programmatic way 
 
 Additionally, two **OSX Services** are offered:
 
-* a **service for switching between two default
-voices** - see [below](#osx-service-for-switching-between-default-voices).
+* a **service for switching between two or more default voices** - see [below](#osx-service-for-switching-between-default-voices).
 * a **service for speaking selected text with a specific voice** - see [below](#osx-service-for-speaking-selected-text-with-a-specific-voice)
 
 # Examples
@@ -222,11 +224,6 @@ NOTES
   Note that the related VoiceOver accessibility feature has its own default
   voice, which is not changed by this utility.
 
-  CAVEAT: As of OSX 10.11, due to a limitation in the underlying `say`
-          utility, custom speaking rates (words per minute) configured via
-          System Preferences are not honored when producing spoken output with
-          the -k option.
-          
 EXAMPLES
     # List all active voices; add -a to list all installed ones.
   voices -l         
@@ -254,10 +251,10 @@ EXAMPLES
 # OSX Service for switching between default voices
 
 This service, which uses an embedded copy of `voices`, is helpful if you use text-to-speech in two or more languages and want to quickly
-switch the default voice between multiple designated voices cyclically.
+switch the default voice between multiple designated voices cyclically, in combination with the built-in speak-selected-text service.
 
 Every time the service is invoked, the next designated voice is made the default voice, and the localized name of the new voice's
-language is spoken to confirm the change by default.
+language is spoken to confirm the change (this is configurable).
 
 You can invoke the service from the standard `Services` menu of any application, or assign it a keyboard shortcut via
 `System Preferences > Keyboard > Shortcuts > Services`.
@@ -280,12 +277,12 @@ You can invoke the service from the standard `Services` menu of any application,
 
 # OSX Service for speaking selected text with a specific voice
 
-This service is helpful if you want the ability to speak selected text in the 
-frontmost application with a fixed alternate voice, to complement the built-in
-service that uses the default voice (see `System Preferences > Dictation & Speech > Text to Speech`).
-This is an alternative to switching the default voice.
+This service provides an alternative to switching the default voice: it speaks
+selected text in the frontmost application with a fixed alternate voice,
+to be used _alongside_ the built-in speak-selected-text service, which
+always uses the default voice (see `System Preferences > Dictation & Speech > Text to Speech`).
 
-For instance, you could customize this service to speak selected text with a voice
+Typically, you would use this service to speak selected text with a voice
 that speaks a different language.
 
 You can invoke it from the standard `Services` menu whenever text is selected in the frontmost application, or assign it a
@@ -344,6 +341,11 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.2.0](https://github.com/mklement0/voices/compare/v0.1.9...v0.2.0)** (2015-07-29):
+  * [enhancement] `voices` now honors custom speaking rates when requested to speak witht the `-k` option
+  * [enhancement] OSX Service `Switch Default Voice.workflow` is now configuration file-based and supports more than 2 voices for cyclical switching; default conformation text spoken on switching is now the localized name of the new voice's language.
+  * [new] OSX Service `Speak With Specific Voice.workflow` allows speaking selected text with a fixed alternate voice.
 
 * **[v0.1.9](https://github.com/mklement0/voices/compare/v0.1.8...v0.1.9)** (2015-07-28):
   * [doc] Corrected the mistaken claim that changing the default voice also changes the _VoiceOver_ default voice: the VoiceOver feature has its own default voice, separate from the TTS feature; this utility only changes the _TTS_ default voice, not also the VoiceOver one.
