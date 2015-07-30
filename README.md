@@ -272,18 +272,18 @@ You can invoke the service from the standard `Services` menu of any application,
   * From any application, open that application's menu and select `Services > Switch Default Voice`.
   * You will be prompted to edit the configuration file, where you can specify the voices to switch between; follow the instructions in the file.
 * To assign a keyboard shortcut to the service, go to `System Preferences > Keyboard > Shortcuts`, category `Services`,
-  scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click near the right edge of the list item.
+  scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click just inside the right edge of the list item.
 * To customize the service again later, open `~/.SwitchDefaultVoice-rc` in your text editor.
 
 # OSX Service for speaking selected text with a specific voice
 
 This service provides an alternative to switching the default voice: it speaks
-selected text in the frontmost application with a fixed alternate voice,
-to be used _alongside_ the built-in speak-selected-text service, which
-always uses the default voice (see `System Preferences > Dictation & Speech > Text to Speech`).
+selected text in the frontmost application with a fixed alternate voice, which
+allows it to be used _alongside_ the built-in speak-selected-text service, which
+always uses the _default_ voice (see `System Preferences > Dictation & Speech > Text to Speech`).
 
 Typically, you would use this service to speak selected text with a voice
-that speaks a different language.
+that speaks a _different language_.
 
 You can invoke it from the standard `Services` menu whenever text is selected in the frontmost application, or assign it a
 keyboard shortcut via `System Preferences > Keyboard > Shortcuts > Services`; e.g., `` ⌥` `` (Opt-\`) to parallel the default shortcut for
@@ -307,9 +307,9 @@ and customize the duplicate as described below.
 
 * In Automator, follow the instructions at the top of the document, which currently only require you to specify the name of the desired voice.
   * Apply your customizations between the lines `#  ------- BEGIN: CUSTOMIZE` and `#  ------- END: CUSTOMIZE`.
-* To assign a keyboard shortcut, go to `System Preferences > Keyboard > Shortcuts`, category `Services`, scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click near the right edge of the list item.
+* To assign a keyboard shortcut, go to `System Preferences > Keyboard > Shortcuts`, category `Services`, scroll to sub-category `General` in the list on the right, select `Speak With Specific Voice.workflow`, and click just inside the right edge of the list item.
 * To customize the service again later, open `~/Library/Services/Speak With Specific Voice.workflow` in Automator.
-  * If you have trouble navigating to `~/Library`, activate Finder, hold down the Option key while selecting the `Go` menu, and select `Library`; from there, navigate to subfolder `Services` and open package `Switch Default Voice.workflow`.
+  * If you have trouble navigating to `~/Library`, activate Finder, hold down the Option key while selecting the `Go` menu, and select `Library`; from there, navigate to subfolder `Services` and open package `Speak With Specific Voice.workflow`.
 
 <!-- DO NOT EDIT THE NEXT CHAPTER and RETAIN THIS COMMENT: The next chapter is updated by `make update-readme/release` with the contents of 'LICENSE.md'. ALSO, LEAVE AT LEAST 1 BLANK LINE AFTER THIS COMMENT. -->
 
@@ -341,6 +341,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.2.1](https://github.com/mklement0/voices/compare/v0.2.0...v0.2.1)** (2015-07-30):
+  * [doc] Read-me corrections.
 
 * **[v0.2.0](https://github.com/mklement0/voices/compare/v0.1.9...v0.2.0)** (2015-07-29):
   * [enhancement] `voices` now honors custom speaking rates when requested to speak witht the `-k` option

@@ -4,6 +4,9 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.2.1](https://github.com/mklement0/voices/compare/v0.2.0...v0.2.1)** (2015-07-30):
+  * [doc] Read-me corrections.
+
 * **[v0.2.0](https://github.com/mklement0/voices/compare/v0.1.9...v0.2.0)** (2015-07-29):
   * [enhancement] `voices` now honors custom speaking rates when requested to speak witht the `-k` option
   * [enhancement] OSX Service `Switch Default Voice.workflow` is now configuration file-based and supports more than 2 voices for cyclical switching; default conformation text spoken on switching is now the localized name of the new voice's language.
