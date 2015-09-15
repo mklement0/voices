@@ -1,6 +1,6 @@
 # NOTE: 
 #       CUSTOMIZE SETTING BELOW.
-#       BE SURE TO RETAIN THE PARENTHESE AROUND VALUES, WHERE PRESENT, AND TO
+#       BE SURE TO RETAIN THE PARENTHESES AROUND VALUES, WHERE PRESENT, AND TO
 #       HAVE NO SPACES AROUND "=".
 #       - This file's path is ~/.SwitchDefaultVoice-rc
 #       - This file is parsed by ~/Library/Services/Switch Default Voice.workflow using Bash.

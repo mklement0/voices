@@ -16,7 +16,7 @@ die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
 # and causes this test to fail.
 # See https://github.com/tlevine/urchin.
 
-voices --version | egrep -w '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' die "No major.minor.patch version number detected in the output."
+voices --version | egrep -Ew 'v?[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' || die "No major.minor.patch version number detected in the output."
 
 exit 0
 
