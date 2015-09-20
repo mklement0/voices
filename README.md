@@ -37,6 +37,9 @@
 
 _Caveat_: As of OSX 10.11 (El Capitan), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
 
+See the examples below, concise [usage information](#usage) further below,
+or read the [manual](doc/voices.md).
+
 Additionally, two **OSX Services** are offered:
 
 * a **service for switching between two or more default voices** - see [below](#osx-service-for-switching-between-default-voices).
@@ -90,6 +93,8 @@ The change-the-default-voice feature makes use of undocumented system internals,
 
 ## Installation from the npm registry
 
+<sup>Note: Even if you don't use Node.js, its package manager, `npm`, works across platforms and is easy to install; try [`curl -L http://git.io/n-install | bash`](https://github.com/mklement0/n-install)</sup>
+
 With [Node.js](http://nodejs.org/) or [io.js](https://iojs.org/) installed, install [the package](https://www.npmjs.com/package/voices) as follows:
 
     [sudo] npm install voices -g
@@ -107,145 +112,47 @@ With [Node.js](http://nodejs.org/) or [io.js](https://iojs.org/) installed, inst
 
 # Usage
 
+Find concise usage information below; for complete documentation, read the
+[manual online](doc/voices.md), or, once installed, run `man voices`
+(`voices --man` if installed manually).
+
 <!-- DO NOT EDIT THE FENCED CODE BLOCK and RETAIN THIS COMMENT: The fenced code block below is updated by `make update-readme/release` with CLI usage information. -->
 
 ```nohighlight
 $ voices --help
 
-SYNOPSIS
-  Get or set or speak with the default voice:
-    voices [-k[-|"text"]] [options] [-d [newDefaultVoice]]
-  List information about / speak with voices:
-    voices [-k[-|"text"]] [options] voice...
-  List / speak with all voices, optionally filtered by languages:
-    voices [-k[-|"text"]] [options] -l [lang...]
-  List languages among voices:
-    voices [-a] -L
-  Manage voices in System Preferences:
+
+Get or set or speak with the DEFAULT VOICE:
+
+    voices [<options>] [-d [<newDefaultVoice>]]
+
+LIST INFORMATION about / speak with voices:
+
+    voices [<options>] <voice>...
+
+List / speak with ALL VOICES, optionally FILTERED BY LANGUAGES:
+
+    voices [<options>] -l [<lang>...]
+
+LIST LANGUAGES among voices:
+
+    voices -L [-a]
+
+MANAGE VOICES in System Preferences:
+
     voices -m
 
-DESCRIPTION
-  Sets the default voice for OS X's TTS (text-to-speech) synthesis or 
-  returns information about the default, active and installed voices.
-  Optionally speaks demo or specifiable text with all targeted voices.
+Shared options (synopsis forms 1-3):
 
-  Case doesn't matter when specifying voice or language names.
-   - Specify voice names as they appear in System Preferences > 
-     Dictation & Speeech and in the output from `say -v \?`.
-   - Specify languages as two-character language IDs (e.g., 'en'), optionally
-     followed by '_' and a region identifier (e.g., 'en_US').
+    -a          target all installed voices (default: only active ones)
+    -k          speak demo text with all targeted voices
+    -k"<text>"  speak specified text
+    -k-         speak text provided via stdin
+    -b          output format: print voice names only
+    -i          output format: print voice internals
+    -q          quiet mode: no printed output
 
-  -l and -L target all *active* voices by default, which are typically a 
-  a *subset* of all *installed* voices, and constitute the set of voices for
-  active use as selected in System Preferences > Dictation & Speech >
-  Text to Speech; adding -a targets all installed voices.
-
-  The -k option for speaking with all targeted voices as well as other 
-  shared options are discussed further below. Without -k, only printed output
-  is produced; conversely, -q silences printed output.
-
-  1st synopsis form: -d [newDefaultVoice]
-    Returns information about the default voice or sets a new default voice.
-
-    Note that any installed voice can be specified as the default voice, not
-    just a currently active one.
-
-  2nd synopsis form: voice...
-    Lists information about the specified voices (whether active or not).
-
-  3rd synopsis form: -l [lang...]
-    Lists information about active, installed, or voices matching one or more
-    specified languages.
-
-    Lists all active voices by default;
-    -a lists all installed ones instead.
-
-    If at least one <lang> operand is given, the list of active voices (by
-    default) / installed voices (with -a) is filtered to output only those
-    matching the specified language(s).
-    
-    <lang> values may be mere language IDs (e.g., 'en') or language + region
-    IDs (e.g., 'en_US'); e.g., 'en' matches all English voice irrespective of
-    region, whereas 'en_US' matches only US English voices.
-
-  4th synopsis form: -L
-    Lists the distinct set of languages supported among all active (by default)
-    or all installed (-a) voices.
-    
-    Languages are listed as language + region identifiers, e.g., 'en_US'.
-
-  5th synopsis form:
-    Opens System Preferences > Dictation & Speech, where you can manage the
-    set of active voices, install additional voices, and control other aspects
-    of text-to-speech synthesis.
-
-  Shared options:
-
-    -q
-      Quiet mode: suppresses printed output, such as when only speech output
-      (-k) is desired or when the new default voice should be set quietly.
-
-    Speaking options (synopsis forms 1-3): -k
-      Note that if the command targets multiple voices, speaking happens
-      after each voice's information has been printed, unless suppressed with
-      -q.
-
-      -k (no argument)
-        Speaks each voice's demo text.
-      -k"text"
-        Speaks the specified text using each voice.
-        Note that "text" must be directly attached to -k and must be quoted
-        to protect it from (unwanted) interpretation by the shell.
-      -k-
-        Speaks text provided via stdin using each voice.
-
-    Printed-output options (synopsis forms 1-3): -b or -i
-      By default, voice information is in the form provided by the standard
-      `say` utility when invoked as `say -v \?`, which is:
-        <voice> <lang> # <demo text>
-      The following, mutually exclusive options modify this behavior:
-
-      -b
-        Outputs mere voice names only.
-      -i
-        Outputs internal voice identifiers, as used by the system.
-
-NOTES
-  Tested on on OSX 10.8 - 10.11; due to use of undocumented system internals,
-  future compatibility of the change-the-default-voice feature is uncertain.
-
-  The focus of this utility is speaking text with *multiple* voices, changing
-  the default voice, and browsing active voices, optionally filtered by 
-  language.
-  By contrast, to just speak text with the default voice or a specified single
-  voice, it is easier to use `say` directly; e.g.:
-    say -v Alex I am. # equivalent of: voices -k"I am." Alex
-
-  Note that the related VoiceOver accessibility feature has its own default
-  voice, which is not changed by this utility.
-
-EXAMPLES
-    # List all active voices; add -a to list all installed ones.
-  voices -l         
-    # Print information about the default voice and speak its demo text.
-  voices -d -k
-    # Print information about voice 'Alex'.
-  voices alex
-    # Make 'Alex' the new default voice, print information about it, and 
-    # speak text that announces the change. 
-  voices -k'The new default voice is Alex.' -d alex 
-    # List languages for which at least one voice is active.
-  voices -L
-    # List active French voices.
-  voices -l fr
-    # Speak the respective demo text with all active voices.
-  voices -l -k
-    # Speak "hello" first with Alex, then with Jill, suppressing printed
-    # output.
-  voices -k"hello" -q alex jill
-    # Print information about all active Spanish voices and speak their
-    # respective demo text.
-  voices -k -l es
+Standard options: --help, --man, --version, --home
 ```
 
 # OSX Service for switching between default voices
@@ -329,6 +236,7 @@ This project gratefully depends on the following open-source components, accordi
 
 * [doctoc (D)](https://github.com/thlorenz/doctoc)
 * [json (D)](https://github.com/trentm/json)
+* [marked-man (D)](https://github.com/kapouer/marked-man#readme)
 * [replace (D)](https://github.com/harthur/replace)
 * [semver (D)](https://github.com/npm/node-semver#readme)
 * [tap (D)](https://github.com/isaacs/node-tap)
@@ -341,6 +249,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.2.3](https://github.com/mklement0/voices/compare/v0.2.2...v0.2.3)** (2015-09-20):
+  * [doc] `voices` now has a man page (if manually installed, use `voices --man`);
+          `voices -h` now just prints concise usage information.
 
 * **[v0.2.2](https://github.com/mklement0/voices/compare/v0.2.1...v0.2.2)** (2015-09-15):
   * [dev] Makefile improvements; various other behind-the-scenes tweaks.

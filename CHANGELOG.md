@@ -4,6 +4,10 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.2.3](https://github.com/mklement0/voices/compare/v0.2.2...v0.2.3)** (2015-09-20):
+  * [doc] `voices` now has a man page (if manually installed, use `voices --man`);
+          `voices -h` now just prints concise usage information.
+
 * **[v0.2.2](https://github.com/mklement0/voices/compare/v0.2.1...v0.2.2)** (2015-09-15):
   * [dev] Makefile improvements; various other behind-the-scenes tweaks.
 

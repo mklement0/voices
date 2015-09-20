@@ -2,7 +2,7 @@
   "name": "voices",
   "description": "OSX CLI for changing the default TTS (text-to-speech) voice and printing information about and speaking text with multiple voices.",
   "private": false,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "os": [
     "darwin"
   ],
@@ -35,15 +35,18 @@
   "net_same2u": {
     "make_pkg": {
       "tocOn": true,
-      "tocTitle": "**Contents**"
+      "tocTitle": "**Contents**",
+      "manOn": true
     }
   },
   "devDependencies": {
     "doctoc": "^0.13.0",
     "json": "^9.0.3",
+    "marked-man": "^0.1.5",
     "replace": "^0.3.0",
     "semver": "^4.2.0",
     "tap": "^0.6.0",
     "urchin": "^0.0.5"
-  }
+  },
+  "man": "./man/voices.1"
 }

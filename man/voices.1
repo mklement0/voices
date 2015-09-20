@@ -1,0 +1,281 @@
+.TH "VOICES" "1" "September 2015" "v0.2.3" ""
+.SH "NAME"
+\fBvoices\fR \- OS X text\-to\-speech voices
+.SH SYNOPSIS
+.P
+Get or set or speak with the DEFAULT VOICE:
+.P
+.RS 2
+.nf
+voices [<options>] [\-d [<newDefaultVoice>]]
+.fi
+.RE
+.P
+LIST INFORMATION about / speak with voices:
+.P
+.RS 2
+.nf
+voices [<options>] <voice>\.\.\.
+.fi
+.RE
+.P
+List / speak with ALL VOICES, optionally FILTERED BY LANGUAGES:
+.P
+.RS 2
+.nf
+voices [<options>] \-l [<lang>\.\.\.]
+.fi
+.RE
+.P
+LIST LANGUAGES among voices:
+.P
+.RS 2
+.nf
+voices \-L [\-a]
+.fi
+.RE
+.P
+MANAGE VOICES in System Preferences:
+.P
+.RS 2
+.nf
+voices \-m
+.fi
+.RE
+.P
+Shared options (synopsis forms 1\-3):
+.P
+.RS 2
+.nf
+\-a          target all installed voices (default: only active ones)
+\-k          speak demo text with all targeted voices
+\-k"<text>"  speak specified text
+\-k\-         speak text provided via stdin
+\-b          output format: print voice names only
+\-i          output format: print voice internals
+\-q          quiet mode: no printed output
+.fi
+.RE
+.P
+Standard options: \fB\-\-help\fP, \fB\-\-man\fP, \fB\-\-version\fP, \fB\-\-home\fP
+.SH DESCRIPTION
+.P
+\fBvoices\fP sets the default voice for OS X's TTS (text\-to\-speech) synthesis or
+.br
+returns information about the default, active and installed voices\.
+.br
+Additionally, it can speak either the demo text or specified text with
+.br
+multiple voices\.
+.P
+Case doesn't matter when specifying voice or language names\.
+.RS 0
+.IP \(bu 2
+Specify voice names as they appear in System Preferences >
+.br
+Dictation & Speeech and in the output from \fBsay \-v \\?\fP\|\.
+.IP \(bu 2
+Specify languages as two\-character language IDs (e\.g\., \fBen\fP), optionally
+.br
+followed by \fB_\fP and a region identifier (e\.g\., \fBen_US\fP)\.
+
+.RE
+.P
+Options \fB\-l\fP and \fB\-L\fP target all \fIactive\fR voices by default, which are
+.br
+typically a a subset of all \fIinstalled\fR voices, and constitute the set of
+.br
+voices selected for active use in System Preferences > Dictation & Speech >
+.br
+Text to Speech\.
+.br
+Adding \fB\-a\fP targets all installed voices\.
+.P
+The \fB\-k\fP option for speaking with all targeted voices as well as other
+.br
+shared options are discussed further below\. Without \fB\-k\fP, only printed output
+.br
+is produced; conversely, \fB\-q\fP silences printed output\.
+.RS 0
+.IP \(bu 2
+1st synopsis form: \fB[\-d [<newDefaultVoice>]]\fP, \fB[\-\-default [<newDefaultVoice>]]\fP
+.br
+Returns information about the default voice or sets a new default voice\.
+.br
+Note that any installed voice can be specified as the default voice, even
+.br
+if it is not among the set of active voices\.
+.IP \(bu 2
+2nd synopsis form: \fB<voice>\.\.\.\fP
+.br
+Lists information about the specified voices (whether active or not)\.
+.IP \(bu 2
+3rd synopsis form: \fB\-l [<lang>\.\.\.]\fP, \fB\-\-list [<lang>\.\.\.]\fP
+.br
+Lists information about active, installed, or voices matching one or more
+.br
+specified languages\.
+.br
+Lists all active voices by default; \fB\-a\fP lists all installed ones\.
+.br
+If at least one \fB<lang>\fP operand is given, the list of active voices (by
+.br
+default) / installed voices (with \fB\-a\fP) is filtered to output only those
+.br
+matching the specified language(s)\.
+\fB<lang>\fP values may be mere language IDs (e\.g\., \fBen\fP) or language + region
+.br
+IDs (e\.g\., \fBen_US\fP); e\.g\., \fBen\fP matches all English voices irrespective of
+.br
+region, whereas \fBen_US\fP matches only US English voices\.
+.IP \(bu 2
+4th synopsis form: \fB\-L\fP, \fB\-\-list\-langs\fP
+.br
+Lists the distinct set of languages supported among all active (by default)
+.br
+or all installed (\fB\-a\fP) voices\.
+.br
+Languages are listed as language + region identifiers, e\.g\., \fBen_US\fP\|\.
+.IP \(bu 2
+5th synopsis form:  \fB\-m\fP, \fB\-\-manage\fP
+.br
+Opens System Preferences > Dictation & Speech, where you can manage the
+.br
+set of active voices, install additional voices, and control other aspects
+.br
+of text\-to\-speech synthesis\.
+
+.RE
+.SH SHARED OPTIONS
+.P
+These options complement the main options, which determine the synopsis form,
+.br
+discussed above\.
+.SS General Options
+.RS 0
+.IP \(bu 2
+\fB\-q\fP
+.br
+Quiet mode: suppresses printed output, such as when only speech output
+.br
+(\fB\-k\fP) is desired or when the new default voice should be set quietly\.
+.br
+Cannot be combined with \fB\-L\fP, whose sole purpose is to print
+.br
+information\.
+
+.RE
+.SS Speaking options (synopsis forms 1\-3):
+.P
+Note that if the command targets multiple voices, speaking happens
+after each voice's information has been printed (unless printing is
+.br
+suppressed with \fB\-q\fP)\.
+.RS 0
+.IP \(bu 2
+\fB\-k\fP, \fB\-\-speak\fP (no argument)
+.br
+  Speaks each targeted voice's demo text\.
+.IP \(bu 2
+\fB\-k"<text>"\fP, \fB\-\-speak="<text>"\fP
+.br
+  Speaks the specified text using each targeted voice\.
+.br
+  Note that \fB"<text>"\fP must be directly attached to the option and should
+.br
+  generally be quoted to protect it from (unwanted) interpretation by the
+.br
+  shell\.
+.IP \(bu 2
+\fB\-k\-\fP, \fB\-\-speak=\-\fP
+.br
+  Speaks text provided via stdin using each targeted voice\.
+
+.RE
+.SS Printed\-Output Options (synopsis forms 1\-3)
+.P
+By default, voice information printed is in the form provided by the standard
+.br
+\fBsay\fP utility when invoked as \fBsay \-v \\?\fP, which is:
+.br
+\fB<voice> <lang> # <demo text>\fP
+.P
+The following, mutually exclusive options modify this behavior:
+.RS 0
+.IP \(bu 2
+\fB\-b\fP, \fB\-\-bare\fP
+.br
+Outputs mere voice names only\.
+.IP \(bu 2
+\fB\-i\fP, \fB\-\-internals\fP
+.br
+Outputs internal voice identifiers, as used by the system\.
+
+.RE
+.SH STANDARD OPTIONS
+.P
+All standard options must be provided as the only argument; all of them provide
+.br
+information only\.
+.RS 0
+.IP \(bu 2
+\fB\-h, \-\-help\fP
+.br
+Prints the contents of the synopsis chapter to stdout for quick reference\.
+.IP \(bu 2
+\fB\-\-man\fP
+.br
+Displays this manual page, which is a helpful alternative to using \fBman\fP,
+.br
+if the manual page isn't installed\.
+.IP \(bu 2
+\fB\-\-version\fP
+.br
+Prints version information\.
+.IP \(bu 2
+\fB\-\-home\fP
+.br
+Opens this utility's home page in the system's default web browser\.
+
+.RE
+.SH LICENSE
+.P
+For license information, bug reports, and more, visit this utility's home page
+.br
+by running \fBvoices \-\-home\fP
+.SH EXAMPLES
+.P
+.RS 2
+.nf
+  # List all active voices; add \-a to list all installed ones\.
+voices \-l         
+
+  # Print information about the default voice and speak its demo text\.
+voices \-d \-k
+
+  # Print information about voice 'Alex'\.
+voices alex
+
+  # Make 'Alex' the new default voice, print information about it, and 
+  # speak text that announces the change\. 
+voices \-k'The new default voice is Alex\.' \-d alex 
+
+  # List languages for which at least one voice is active\.
+voices \-L
+
+  # List active French voices\.
+voices \-l fr
+
+  # Speak the respective demo text with all active voices\.
+voices \-l \-k
+
+  # Speak "hello" first with Alex, then with Jill, suppressing printed
+  # output\.
+voices \-k"hello" \-q alex jill
+
+  # Print information about all active Spanish voices and speak their
+  # respective demo text\.
+voices \-k \-l es
+.fi
+.RE
+
