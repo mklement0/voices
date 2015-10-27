@@ -250,6 +250,10 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.0](https://github.com/mklement0/voices/compare/v0.2.3...v0.3.0)** (2015-10-27):
+  * [Potentially breaking change] `-i` for reporting voice internals now reports
+    an extra variable `BundleID` as the last item, i.e., the voice's bundle ID.
+
 * **[v0.2.3](https://github.com/mklement0/voices/compare/v0.2.2...v0.2.3)** (2015-09-20):
   * [doc] `voices` now has a man page (if manually installed, use `voices --man`);
           `voices -h` now just prints concise usage information.

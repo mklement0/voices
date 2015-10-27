@@ -10,7 +10,7 @@ Contains an OSX Automator-based services:
 
 A Git pre-commit hook (`.git/hooks/pre-commit`) does the following:
 
-* `Switch Default Voice.workflow` only: copies the latest `voices` CLI from `bin` into the `*.workflow` bundle
+* `*.workflow` folders with a 'Contents/net.same2u' subdir only: copies the latest `voices` CLI from `bin` there.
 * Removes any embedded QuickLook previews (*.png), as they're not needed (and quite large).
 * zips up the bundle for simple download from GitHub
 * adds the modified files to the index

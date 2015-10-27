@@ -4,7 +4,7 @@
 
 kTHIS_NAME=${BASH_SOURCE##*/}
 kTHIS_HOMEPAGE='https://github.com/mklement0/voices'
-kTHIS_VERSION='v0.2.3' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
+kTHIS_VERSION='v0.3.0' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
 
 unset CDPATH  # To prevent unexpected `cd` behavior.
 
@@ -169,18 +169,20 @@ getLegacyVoiceInternals() {
 
 }
 
+
 # Determines the internal identifiers of a voice, given as its friendly name,
 # as (partially) needed to set a given voice as the default voice.
-# Sets the following script-global variables:
+# *Sets* the following *script-global variables*:
 #   InternalVoiceName
 #   VoiceCreator
 #   VoiceID
+#   BundleID
 getVoiceInternals() {
 
   local friendlyVoiceName=$1 plistFile internalVoiceName
 
   # Get the internal voice name - note that this one may not be case-exact,
-  # which is why extract the exact case from the Info.plist file below
+  # which is why we extract the exact case from the Info.plist file below
   # and store in global var. $InternalVoiceName (note the uppercase first letter).
   internalVoiceName=$(friendlyToInternalVoiceName "$friendlyVoiceName")
 
@@ -210,6 +212,8 @@ getVoiceInternals() {
   else
     VoiceID=$(/usr/libexec/PlistBuddy -c "print :VoiceAttributes:VoiceNumericID" "$plistFile" 2>/dev/null) || die "Voice '$friendlyVoiceName': failed to obtain numeric voice ID."
   fi
+
+  BundleID=$(/usr/libexec/PlistBuddy -c "print :CFBundleIdentifier" $plistFile) || die "Voice '$friendlyVoiceName': failed to obtain bundle ID."
 
 }
 
@@ -247,7 +251,7 @@ getVoiceNamesByLangId() {
 printVoiceInternals() {
   getVoiceInternals "$1"
   local v result=''
-  for v in InternalVoiceName VoiceCreator VoiceID; do
+  for v in InternalVoiceName VoiceCreator VoiceID BundleID; do
     [[ -z $result ]] && result="$v=${!v}" || result+=" $v=${!v}"
   done
   echo "$result"
