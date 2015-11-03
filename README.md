@@ -45,6 +45,9 @@ Additionally, two **OSX Services** are offered:
 * a **service for switching between two or more default voices** - see [below](#osx-service-for-switching-between-default-voices).
 * a **service for speaking selected text with a specific voice** - see [below](#osx-service-for-speaking-selected-text-with-a-specific-voice)
 
+Note: If you have [Alfred 2](http://alfredapp.com/) with its [Power Pack](https://www.alfredapp.com/powerpack/), consider workflow
+**[speak.awf](https://github.com/mklement0/speak.awf)** as a superior alternative.
+
 # Examples
 
 ```shell
@@ -197,7 +200,7 @@ keyboard shortcut via `System Preferences > Keyboard > Shortcuts > Services`; e.
 the built-in service, `⌥⎋` (Opt-Esc).
 
 Invoking the service again while text from a previous invocation is still being spoken aborts speaking.  
-_Caveat_: This only works if you haven't switched to a different application or removed the text selection since speaking started.
+_Caveat_: This only works if text - _any_ text - is selected in the activate applciation at the time the service is invoked again.
 
 If desired, you can duplicate the service so as to be able to speak with one of _multiple_ alternate voices:  
 Once installed, duplicate `~/Library/Services/Speak With Specific Voice.workflow` in Finder, give it a meaningful name, 
@@ -249,6 +252,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.1](https://github.com/mklement0/voices/compare/v0.3.0...v0.3.1)** (2015-11-03):
+  * [doc] Added link to Alfred 2 workflow _speak.waf_ as a superior alternative
+    to the OSX services.
 
 * **[v0.3.0](https://github.com/mklement0/voices/compare/v0.2.3...v0.3.0)** (2015-10-27):
   * [Potentially breaking change] `-i` for reporting voice internals now reports
