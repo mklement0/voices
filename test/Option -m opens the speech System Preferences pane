@@ -13,7 +13,10 @@ die() { (( $# > 0 )) && echo "ERROR: $*" >&2; exit 1; }
 
 voices -m || die
 
+# Note: We can only verify the target *pane*, not the specific *anchor* on that pane.
 osascript <<'EOF' || die
+set AppleScript's text item delimiters to "."
+set minorOsNum to text item 2 of system version of (system info) as number
 tell application "System Preferences"
   if not it is running then error "System Preferences app is not running."
   set currPane to ""
@@ -21,7 +24,11 @@ tell application "System Preferences"
     set currPane to id of current pane
   end try
   if currPane = "" then error "No System Preferences pane is active."
-  if currPane ≠ "com.apple.preference.speech" then error "The Dictation & Speech pane is not active; instead, it is " & currPane
+  if minorOsNum >= 12 then # Sierra+
+    if currPane ≠ "com.apple.preference.universalaccess" then error "The Accessibility pane is not active; instead, it is " & currPane
+  else # El Capitan-
+    if currPane ≠ "com.apple.preference.speech" then error "The Dictation & Speech pane is not active; instead, it is " & currPane
+  end if
 end tell
 activate application "Terminal"
 EOF

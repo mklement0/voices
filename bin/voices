@@ -4,7 +4,7 @@
 
 kTHIS_NAME=${BASH_SOURCE##*/}
 kTHIS_HOMEPAGE='https://github.com/mklement0/voices'
-kTHIS_VERSION='v0.3.1' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
+kTHIS_VERSION='v0.3.2' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
 
 unset CDPATH  # To prevent unexpected `cd` behavior.
 
@@ -450,10 +450,16 @@ speakText() {
   say -v "$friendlyVoiceName" "${rateOpts[@]}" -- "$text"
 }
 
-openTtsSystemPrefs() {
+openTtsSystemPrefs() {  
   osascript <<'EOF'
+    set AppleScript's text item delimiters to "."
+    set minorOsNum to text item 2 of system version of (system info) as number
     tell application "System Preferences"
-      reveal anchor "TTS" of pane "com.apple.preference.speech"
+      if minorOsNum ≥ 12 then # 10.12+ (Sierra+)
+        reveal anchor "TextToSpeech" of pane "com.apple.preference.universalaccess"
+      else # 10.11- (El Capitan-)
+        reveal anchor "TTS" of pane "com.apple.preference.speech"
+      end if
       activate
     end tell
 EOF

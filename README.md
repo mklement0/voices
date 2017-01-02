@@ -5,16 +5,16 @@
 
 **Contents**
 
-- [voices &mdash; introduction](#voices-&mdash-introduction)
+- [voices &mdash; TTS CLI for macOS](#voices-&mdash-tts-cli-for-macos)
 - [Examples](#examples)
 - [Installation](#installation)
   - [Installation from the npm registry](#installation-from-the-npm-registry)
   - [Manual installation](#manual-installation)
 - [Usage](#usage)
-- [OSX Service for switching between default voices](#osx-service-for-switching-between-default-voices)
+- [macOS Service for switching between default voices](#macos-service-for-switching-between-default-voices)
   - [Installation](#installation-1)
   - [Customization](#customization)
-- [OSX Service for speaking selected text with a specific voice](#osx-service-for-speaking-selected-text-with-a-specific-voice)
+- [macOS Service for speaking selected text with a specific voice](#macos-service-for-speaking-selected-text-with-a-specific-voice)
   - [Installation](#installation-2)
   - [Customization](#customization-1)
 - [License](#license)
@@ -24,9 +24,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# voices &mdash; introduction
+# voices &mdash; TTS CLI for macOS
 
-`voices` is an **OSX CLI** for **changing the default TTS (text-to-speech) voice** and for **printing information about and/or speaking text with multiple voices**.
+`voices` is a **macOS CLI** for **changing the default TTS (text-to-speech) voice** and for **printing information about and/or speaking text with multiple voices**.
 
 `voices` complements the standard `say` utility by:
 
@@ -35,17 +35,22 @@
  * filtering voices by language
  * speaking text with _multiple_ voices.
 
-_Caveat_: As of OSX 10.11 (El Capitan), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+_Caveats_: 
+
+* As of macOS 10.12 (Sierra), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+* `voices` currently only fully supports voices provided by _Apple_. Support 
+for third-party voices such as [InfoVox iVox](http://www.assistiveware.com/product/infovox-ivox) is limited to _speaking_ with them, 
+and *the macOS Services documented below will not work with them*.
 
 See the examples below, concise [usage information](#usage) further below,
 or read the [manual](doc/voices.md).
 
-Additionally, two **OSX Services** are offered:
+Additionally, two **macOS Services** are offered:
 
-* a **service for switching between two or more default voices** - see [below](#osx-service-for-switching-between-default-voices).
-* a **service for speaking selected text with a specific voice** - see [below](#osx-service-for-speaking-selected-text-with-a-specific-voice)
+* a **service for switching between two or more default voices** - see [below](#macos-service-for-switching-between-default-voices).
+* a **service for speaking selected text with a specific voice** - see [below](#macos-service-for-speaking-selected-text-with-a-specific-voice)
 
-Note: If you have [Alfred 2](http://alfredapp.com/) with its [Power Pack](https://www.alfredapp.com/powerpack/), consider workflow
+Note: If you have [Alfred](http://alfredapp.com/) with its [Power Pack](https://www.alfredapp.com/powerpack/), consider workflow
 **[speak.awf](https://github.com/mklement0/speak.awf)** as a superior alternative.
 
 # Examples
@@ -87,12 +92,12 @@ voices -k"hello" -q alex jill
 
 **Supported platforms**
 
-* **OSX**
+* **macOS**
 
-Verified to work from OSX 10.8 (Mountain Lion) up to 10.11 (El Capitan).
+Verified to work from OS X 10.8 (Mountain Lion) up to macOS 10.12 (Sierra).
 
 The change-the-default-voice feature makes use of undocumented system internals, so its future compatiblity is uncertain.
-[Do let me know](https://github.com/mklement0/voices/issues) if you find the feature broken in a future OSX version.
+[Do let me know](https://github.com/mklement0/voices/issues) if you find the feature broken in a future macOS version.
 
 ## Installation from the npm registry
 
@@ -158,7 +163,7 @@ Shared options (synopsis forms 1-3):
 Standard options: --help, --man, --version, --home
 ```
 
-# OSX Service for switching between default voices
+# macOS Service for switching between default voices
 
 This service, which uses an embedded copy of `voices`, is helpful if you use text-to-speech in two or more languages and want to quickly
 switch the default voice between multiple designated voices cyclically, in combination with the built-in speak-selected-text service.
@@ -166,7 +171,7 @@ switch the default voice between multiple designated voices cyclically, in combi
 Every time the service is invoked, the next designated voice is made the default voice, and the localized name of the new voice's
 language is spoken to confirm the change (this is configurable).
 
-You can invoke the service from the standard `Services` menu of any application, or assign it a keyboard shortcut via
+You can invoke the service from any application's standard `Services` menu, category `General`, or assign it a keyboard shortcut via
 `System Preferences > Keyboard > Shortcuts > Services`.
 
 ## Installation
@@ -185,7 +190,7 @@ You can invoke the service from the standard `Services` menu of any application,
   scroll to sub-category `General` in the list on the right, select `Switch Default Voice`, and click just inside the right edge of the list item.
 * To customize the service again later, open `~/.SwitchDefaultVoice-rc` in your text editor.
 
-# OSX Service for speaking selected text with a specific voice
+# macOS Service for speaking selected text with a specific voice
 
 This service provides an alternative to switching the default voice: it speaks
 selected text in the frontmost application with a fixed alternate voice, which
@@ -195,7 +200,7 @@ always uses the _default_ voice (see `System Preferences > Dictation & Speech > 
 Typically, you would use this service to speak selected text with a voice
 that speaks a _different language_.
 
-You can invoke it from the standard `Services` menu whenever text is selected in the frontmost application, or assign it a
+You can invoke it from the standard `Services` menu, category `Text`, whenever text is selected in the frontmost application, or assign it a
 keyboard shortcut via `System Preferences > Keyboard > Shortcuts > Services`; e.g., `` ⌥` `` (Opt-\`) to parallel the default shortcut for
 the built-in service, `⌥⎋` (Opt-Esc).
 
@@ -225,7 +230,7 @@ and customize the duplicate as described below.
 
 # License
 
-Copyright (c) 2015 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
+Copyright (c) 2015-2017 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
 
 ## Acknowledgements
 
@@ -252,6 +257,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.2](https://github.com/mklement0/voices/compare/v0.3.1...v0.3.2)** (2017-01-03):
+  * [doc] Limitations of support for third-party voices noted.
+  * [fix] `voices -m` now works on macOS Sierra.
 
 * **[v0.3.1](https://github.com/mklement0/voices/compare/v0.3.0...v0.3.1)** (2015-11-03):
   * [doc] Added link to Alfred 2 workflow _speak.waf_ as a superior alternative
