@@ -4,9 +4,10 @@
 
 kTHIS_NAME=${BASH_SOURCE##*/}
 kTHIS_HOMEPAGE='https://github.com/mklement0/voices'
-kTHIS_VERSION='v0.3.2' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
+kTHIS_VERSION='v0.3.3' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
 
-unset CDPATH  # To prevent unexpected `cd` behavior.
+unset CDPATH # Prevent unexpected `cd` behavior.
+PATH='/usr/bin:/bin:/usr/sbin:/sbin' # Use default $PATH to ensure that system versions of utilities are called.
 
 # --- Begin: STANDARD HELPER FUNCTIONS
 
@@ -296,6 +297,7 @@ EOF
       # Get the list of *explicitly deactivated* voices among the *active-by-default* ones.
     deactivatedDefaults=$(/usr/libexec/PlistBuddy -c 'print' "$FILE_PREFS" | grep -E "$re"'0$' | awk '{ print $1 }' | fgrep -x "$ACTIVE_BY_DEFAULT")
 
+
     # pv activeNonDefaults deactivatedDefaults
 
     if [[ -n $deactivatedDefaults ]]; then
@@ -319,8 +321,7 @@ EOF
 
     # Extract the internal names from the bundle IDs - note that premium voices have ".premium" as a suffix -
     # and output the friendly equivalents of the internal names.
-  echo "$active" | awk -F '\.' '{ sub("\.premium$", ""); print $NF }' | internalToFriendlyVoiceName
-
+  echo "$active" | awk -F '\\.' '{ sub(/\.premium$/, ""); print $NF }' | internalToFriendlyVoiceName
 }
 
 # SYNOPSIS
@@ -628,7 +629,7 @@ if (( manage )); then
   openTtsSystemPrefs
   exit 0
 elif (( listLangs )); then
-  # List the distinct, sorted set of language IDs only - by default among the active voices only, on request (-a) among all installed voices.
+  # List the distinct, sorted set of language IDs only - by default among the active voices only, on request (-a) among all installed voices.  
   { (( allInstalled )) && listInstalledVoices || listActiveVoices; } | egrep -o ' [a-z]{2}[_-]\w+ +#' | awk '{ print $1 }' | sort -u
   (( ${PIPESTATUS[0]} == 0 )) || die
   exit 0

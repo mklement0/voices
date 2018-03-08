@@ -4,6 +4,11 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.3](https://github.com/mklement0/voices/compare/v0.3.2...v0.3.3)** (2018-03-08):
+  * [fix] It is now ensured that the system versions of standard utilities such
+          as `awk` are called, to prevent unexpected behavior stemming from 
+          user-installed versions in /usr/local/bin getting called.
+
 * **[v0.3.2](https://github.com/mklement0/voices/compare/v0.3.1...v0.3.2)** (2017-01-03):
   * [doc] Limitations of support for third-party voices noted.
   * [fix] `voices -m` now works on macOS Sierra.
