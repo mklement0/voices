@@ -176,7 +176,7 @@ You can invoke the service from any application's standard `Services` menu, cate
 
 ## Installation
 
-* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Switch Default Voice.workflow.zip).
+* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Switch%20Default%20Voice.workflow.zip).
 * In Finder, open the ZIP file, which creates package `Switch Default Voice.workflow` in the same folder.
 * Open `Switch Default Voice.workflow` and choose `Install` when prompted - this will place the package in `~/Library/Services/`.
 * Choose `Done` when prompted and proceed with customization below.
@@ -213,7 +213,7 @@ and customize the duplicate as described below.
 
 ## Installation
 
-* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Speak With Specific Voice.workflow.zip).
+* Download [this ZIP file](https://raw.githubusercontent.com/mklement0/voices/stable/osx-service/Speak%20With%20Specific%20Voice.workflow.zip).
 * In Finder, open the ZIP file, which creates package `Speak With Specific Voice.workflow` in the same folder.
 * Open `Speak With Specific Voice.workflow` and choose `Install` when prompted - this will place the package in `~/Library/Services/`.
 * Choose `Open in Automator` when prompted and proceed with customization below.
@@ -257,6 +257,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.4](https://github.com/mklement0/voices/compare/v0.3.3...v0.3.4)** (2018-03-21):
+  * [doc] Links to workflow ZIPs fixed.
 
 * **[v0.3.3](https://github.com/mklement0/voices/compare/v0.3.2...v0.3.3)** (2018-03-08):
   * [fix] It is now ensured that the system versions of standard utilities such

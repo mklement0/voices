@@ -4,6 +4,9 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.4](https://github.com/mklement0/voices/compare/v0.3.3...v0.3.4)** (2018-03-21):
+  * [doc] Links to workflow ZIPs fixed.
+
 * **[v0.3.3](https://github.com/mklement0/voices/compare/v0.3.2...v0.3.3)** (2018-03-08):
   * [fix] It is now ensured that the system versions of standard utilities such
           as `awk` are called, to prevent unexpected behavior stemming from 
