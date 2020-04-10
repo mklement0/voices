@@ -35,12 +35,16 @@
  * filtering voices by language
  * speaking text with _multiple_ voices.
 
-_Caveats_: 
+**Caveats**: 
 
 * As of macOS 10.12 (Sierra), there is no documented programmatic way to change the default voice. Thus, this utility makes use of undocumented system internals, which, unfortunately, means that future compatibility of this feature is uncertain. [Feedback](https://github.com/mklement0/voices/issues) welcome.
+
 * `voices` currently only fully supports voices provided by _Apple_. Support 
 for third-party voices such as [InfoVox iVox](http://www.assistiveware.com/product/infovox-ivox) is limited to _speaking_ with them, 
 and *the macOS Services documented below will not work with them*.
+
+* Additionally, as of macOS 10.15, _Siri_ voices are _not_ supported, due to lack of API support (see [this Stack Overflow question](https://stackoverflow.com/q/61122378/45375)).
+
 
 See the examples below, concise [usage information](#usage) further below,
 or read the [manual](doc/voices.md).
@@ -103,7 +107,7 @@ The change-the-default-voice feature makes use of undocumented system internals,
 
 <sup>Note: Even if you don't use Node.js, its package manager, `npm`, works across platforms and is easy to install; try [`curl -L http://git.io/n-install | bash`](https://github.com/mklement0/n-install)</sup>
 
-With [Node.js](http://nodejs.org/) or [io.js](https://iojs.org/) installed, install [the package](https://www.npmjs.com/package/voices) as follows:
+With [Node.js](http://nodejs.org/) installed, install [the package](https://www.npmjs.com/package/voices) as follows:
 
     [sudo] npm install voices -g
 
