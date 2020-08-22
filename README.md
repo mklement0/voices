@@ -34,6 +34,8 @@
  * operating on _active_ voices - those selected for active use - rather than all _installed_ voices
  * filtering voices by language
  * speaking text with _multiple_ voices.
+   * On a related note: For a simple `say` wrapper that supports text with _embedded instructions to change the voice mid-text_ (e.g.,
+`[[voice alex]]`), assuming you have [Powershell](https://github.com/PowerShell/PowerShell#get-powershell) installed, see [this comment](https://github.com/mklement0/voices/issues/6#issuecomment-666714554).
 
 **Caveats**: 
 
@@ -44,7 +46,6 @@ for third-party voices such as [InfoVox iVox](http://www.assistiveware.com/produ
 and *the macOS Services documented below will not work with them*.
 
 * Additionally, as of macOS 10.15, _Siri_ voices are _not_ supported, due to lack of API support (see [this Stack Overflow question](https://stackoverflow.com/q/61122378/45375)).
-
 
 See the examples below, concise [usage information](#usage) further below,
 or read the [manual](doc/voices.md).
