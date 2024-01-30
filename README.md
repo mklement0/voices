@@ -26,6 +26,8 @@
 
 # voices &mdash; TTS CLI for macOS
 
+[**IMPORTANT**: PARTIALLY BROKEN AS OF macOS Sonoma (14): many installed voices aren't recognized, and the default voice isn't listed with `-l`] 
+
 `voices` is a **macOS CLI** for **changing the default TTS (text-to-speech) voice** and for **printing information about and/or speaking text with multiple voices**.
 
 `voices` complements the standard `say` utility by:
